@@ -3,748 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPND MENU - Pro API System</title>
+    <title>UPND LINK — Генератор ссылок</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: linear-gradient(135deg, #0a0e27 0%, #1a0033 50%, #0a0e27 100%);
-            color: #e0e0ff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .stars {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: #fff;
-            border-radius: 50%;
-            animation: twinkle 3s infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        .container {
-            position: relative;
-            z-index: 2;
-            max-width: 1200px;
-            margin: 0 auto;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
             padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 30px;
-            background: rgba(255, 0, 255, 0.1);
-            border: 2px solid #ff00ff;
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(255, 0, 255, 0.3), inset 0 0 20px rgba(255, 0, 255, 0.1);
-            animation: glow 3s ease-in-out infinite;
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 30px rgba(255, 0, 255, 0.3), inset 0 0 20px rgba(255, 0, 255, 0.1); }
-            50% { box-shadow: 0 0 50px rgba(255, 0, 255, 0.6), inset 0 0 30px rgba(255, 0, 255, 0.2); }
-        }
-
-        h1 {
-            font-size: 3em;
-            background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .tabs {
+            min-height: 100vh;
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
         }
-
-        .tab-btn {
-            padding: 12px 25px;
-            background: rgba(0, 255, 255, 0.1);
-            border: 2px solid #00ffff;
-            color: #00ffff;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-        }
-
-        .tab-btn:hover {
-            background: rgba(0, 255, 255, 0.2);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
-            transform: translateY(-2px);
-        }
-
-        .tab-btn.active {
-            background: rgba(255, 0, 255, 0.3);
-            border-color: #ff00ff;
-            color: #ff00ff;
-            box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
-        }
-
-        .content {
-            display: none;
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        .content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card {
-            background: rgba(20, 20, 60, 0.8);
-            border: 2px solid rgba(0, 255, 255, 0.3);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
-        }
-
-        .card:hover {
-            border-color: rgba(255, 0, 255, 0.5);
-            box-shadow: 0 8px 32px rgba(255, 0, 255, 0.2);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #00ffff;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-        }
-
-        input, textarea, select {
+        .container {
+            max-width: 800px;
             width: 100%;
-            padding: 12px;
-            background: rgba(10, 10, 40, 0.9);
-            border: 2px solid rgba(0, 255, 255, 0.3);
-            color: #e0e0ff;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: 0.3s;
+            background: #161b22;
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid #30363d;
         }
-
-        input:focus, textarea:focus, select:focus {
+        h1 {
+            text-align: center;
+            color: #58a6ff;
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #8b949e;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .input-group input, .input-group textarea, .input-group select {
+            flex: 1;
+            min-width: 200px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            color: #c9d1d9;
+            padding: 12px 16px;
+            font-size: 14px;
             outline: none;
-            border-color: #ff00ff;
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
         }
-
-        button {
-            padding: 12px 30px;
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
+        .input-group textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: #58a6ff;
+        }
+        .btn {
+            padding: 10px 24px;
             border: none;
-            color: white;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(255, 0, 255, 0.7);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .key-item {
-            background: rgba(30, 30, 80, 0.6);
-            border-left: 4px solid #00ffff;
-            padding: 15px;
-            margin-bottom: 10px;
             border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .btn-primary { background: #238636; color: white; }
+        .btn-primary:hover { background: #2ea043; }
+        .btn-danger { background: #da3633; color: white; }
+        .btn-danger:hover { background: #f85149; }
+        .btn-secondary { background: #21262d; color: #c9d1d9; }
+        .btn-secondary:hover { background: #30363d; }
+        .btn-sm { padding: 4px 12px; font-size: 12px; }
+        .link-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .link-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: 0.3s;
-        }
-
-        .key-item:hover {
-            border-left-color: #ff00ff;
-            background: rgba(40, 40, 100, 0.7);
-        }
-
-        .key-info {
-            flex: 1;
-        }
-
-        .key-name {
-            color: #00ffff;
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .key-code {
-            color: #ff00ff;
-            font-size: 12px;
-            font-family: monospace;
-            margin-top: 5px;
-        }
-
-        .key-expiry {
-            color: #ffff00;
-            font-size: 12px;
-            margin-top: 3px;
-        }
-
-        .key-actions {
-            display: flex;
+            flex-wrap: wrap;
             gap: 10px;
         }
-
-        .btn-small {
-            padding: 8px 15px;
-            font-size: 12px;
-            border-radius: 6px;
-        }
-
-        .btn-delete {
-            background: linear-gradient(45deg, #ff0000, #ff6666);
-        }
-
-        .btn-view {
-            background: linear-gradient(45deg, #00ff00, #66ff66);
-        }
-
-        .log-entry {
-            background: rgba(30, 30, 80, 0.6);
-            border-left: 4px solid #00ff00;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 6px;
+        .link-card .info { display: flex; flex-direction: column; gap: 4px; }
+        .link-card .name { font-weight: 700; color: #58a6ff; font-size: 16px; }
+        .link-card .url {
+            font-family: 'Courier New', monospace;
+            color: #f0883e;
             font-size: 13px;
+            word-break: break-all;
         }
-
-        .log-player {
-            color: #00ffff;
-            font-weight: bold;
-        }
-
-        .log-time {
-            color: #ffff00;
-            font-size: 11px;
-        }
-
-        .log-script {
-            color: #ff00ff;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-box {
-            background: rgba(30, 30, 80, 0.6);
-            border: 2px solid #00ffff;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5em;
-            color: #ff00ff;
-            font-weight: bold;
-        }
-
-        .stat-label {
-            color: #00ffff;
-            margin-top: 10px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: rgba(20, 20, 60, 0.95);
-            border: 2px solid #ff00ff;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 0 50px rgba(255, 0, 255, 0.5);
-        }
-
-        .close-modal {
-            float: right;
-            font-size: 28px;
-            color: #ff00ff;
-            cursor: pointer;
-            border: none;
-            background: none;
-            padding: 0;
-            box-shadow: none;
-        }
-
-        .close-modal:hover {
-            color: #00ffff;
-        }
-
-        .script-preview {
-            background: rgba(10, 10, 40, 0.9);
-            border: 1px solid #00ffff;
-            padding: 15px;
-            border-radius: 8px;
-            max-height: 300px;
-            overflow-y: auto;
-            font-family: monospace;
+        .link-card .meta {
             font-size: 12px;
-            color: #00ff00;
-            margin: 15px 0;
+            color: #8b949e;
         }
-
-        .live-indicator {
+        .link-card .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+        .empty { text-align: center; color: #8b949e; padding: 40px 0; font-size: 16px; }
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            background: #238636;
+            color: white;
+            display: none;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            z-index: 999;
+            font-weight: 500;
+        }
+        .toast.error { background: #da3633; }
+        .badge {
             display: inline-block;
-            width: 10px;
-            height: 10px;
-            background: #00ff00;
-            border-radius: 50%;
-            animation: blink 1s infinite;
-            margin-right: 8px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
         }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        .badge-active { background: #238636; color: white; }
+        .badge-expired { background: #da3633; color: white; }
+        .badge-limited { background: #d29922; color: #0d1117; }
+        .row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .row .input-group { flex: 1; }
+        .api-info {
+            background: #0d1117;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #8b949e;
         }
-
-        .section-title {
-            color: #00ffff;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-            border-bottom: 2px solid #ff00ff;
-            padding-bottom: 10px;
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2em; }
-            .tabs { flex-direction: column; }
-            .tab-btn { width: 100%; }
-            .key-item { flex-direction: column; align-items: flex-start; }
-            .key-actions { margin-top: 10px; width: 100%; }
+        .api-info code {
+            color: #f0883e;
+            background: #1c1c2e;
+            padding: 2px 8px;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
-    
     <div class="container">
-        <header>
-            <h1>✨ UPND MENU PRO ✨</h1>
-            <p style="margin-top: 10px; color: #00ffff;">Advanced Key Management System</p>
-        </header>
+        <h1>🔗 UPND LINK</h1>
+        <p class="subtitle">Создавай ссылки на скрипты для Roblox</p>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="openTab('scripts')">📜 Скрипты</button>
-            <button class="tab-btn" onclick="openTab('add')">➕ Добавить</button>
-            <button class="tab-btn" onclick="openTab('temp')">⏰ Временные</button>
-            <button class="tab-btn" onclick="openTab('keys')">🔑 Все ключи</button>
-            <button class="tab-btn" onclick="openTab('stats')">📊 Статистика</button>
-            <button class="tab-btn" onclick="openTab('api')">🔗 API</button>
-        </div>
-
-        <!-- Скрипты -->
-        <div id="scripts" class="content active">
-            <div class="section-title">📜 Доступные скрипты</div>
-            <div id="scripts-list"></div>
-        </div>
-
-        <!-- Добавить ключ -->
-        <div id="add" class="content">
-            <div class="section-title">➕ Добавить постоянный ключ</div>
-            <div class="card">
-                <div class="form-group">
-                    <label>Название скрипта:</label>
-                    <input type="text" id="new-name" placeholder="Например: UPND Farm">
-                </div>
-                <div class="form-group">
-                    <label>Ключ (начнется с und_):</label>
-                    <input type="text" id="new-key" placeholder="Введите уникальный ключ">
-                </div>
-                <div class="form-group">
-                    <label>Код скрипта (Lua):</label>
-                    <textarea id="new-code" rows="8" placeholder="print('Hello world')"></textarea>
-                </div>
-                <button onclick="addKey()">💾 Сохранить ключ</button>
+        <!-- Форма создания -->
+        <div style="background:#0d1117;border-radius:12px;padding:20px;border:1px solid #30363d;margin-bottom:20px;">
+            <h3 style="color:#58a6ff;margin-bottom:15px;">📝 Создать ссылку</h3>
+            <div class="input-group">
+                <input type="text" id="scriptName" placeholder="Название скрипта (например, Speed 50)">
             </div>
-        </div>
-
-        <!-- Временные ключи -->
-        <div id="temp" class="content">
-            <div class="section-title">⏰ Создать временный ключ</div>
-            <div class="card">
-                <div class="form-group">
-                    <label>Название скрипта:</label>
-                    <input type="text" id="temp-name" placeholder="Например: UPND Trial">
-                </div>
-                <div class="form-group">
-                    <label>Код скрипта (Lua):</label>
-                    <textarea id="temp-code" rows="6" placeholder="print('Trial Script')"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Срок действия (дней):</label>
-                    <select id="temp-days">
-                        <option value="1">1 день</option>
-                        <option value="3">3 дня</option>
-                        <option value="7" selected>7 дней</option>
-                        <option value="14">14 дней</option>
-                        <option value="30">30 дней</option>
-                        <option value="90">90 дней</option>
+            <div class="input-group">
+                <textarea id="scriptCode" placeholder="Вставь Lua-код скрипта..."></textarea>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <select id="expiryType">
+                        <option value="hour">1 час</option>
+                        <option value="day">1 день</option>
+                        <option value="week">1 неделя</option>
+                        <option value="month">1 месяц</option>
+                        <option value="never">Никогда</option>
                     </select>
                 </div>
-                <button onclick="createTempKey()">🔑 Создать временный ключ</button>
-            </div>
-            <div id="temp-keys-list" style="margin-top: 20px;"></div>
-        </div>
-
-        <!-- Все ключи -->
-        <div id="keys" class="content">
-            <div class="section-title">🔑 Управление ключами</div>
-            <div id="keys-list"></div>
-        </div>
-
-        <!-- Статистика -->
-        <div id="stats" class="content">
-            <div class="section-title">📊 Статистика использования</div>
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <div class="stat-number" id="total-activations">0</div>
-                    <div class="stat-label">Всего активаций</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number" id="unique-players">0</div>
-                    <div class="stat-label">Уникальных игроков</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number" id="active-keys">0</div>
-                    <div class="stat-label">Активных ключей</div>
+                <div class="input-group">
+                    <input type="number" id="maxUses" placeholder="Макс. использований (0=безлимит)" value="0" min="0">
                 </div>
             </div>
-            <div class="section-title" style="margin-top: 30px;">📝 Лог активности <span class="live-indicator"></span></div>
-            <div id="logs-list"></div>
+            <button class="btn btn-primary" onclick="createLink()">🔗 Создать ссылку</button>
+            <button class="btn btn-secondary" onclick="clearForm()" style="margin-left:8px;">🗑️ Очистить</button>
         </div>
 
-        <!-- API -->
-        <div id="api" class="content">
-            <div class="section-title">🔗 API Документация</div>
-            <div class="card">
-                <h3 style="color: #00ffff; margin-bottom: 15px;">Эндпоинты:</h3>
-                <p style="margin-bottom: 10px;"><strong>Проверка ключа:</strong></p>
-                <div class="script-preview">?action=check&key=und_ВАШ_КЛЮЧ</div>
-                <p style="margin-bottom: 10px;"><strong>Пинг сервера:</strong></p>
-                <div class="script-preview">?action=ping</div>
-                <p style="margin-bottom: 10px;"><strong>Логирование (отправляется автоматически):</strong></p>
-                <div class="script-preview">?action=log&key=und_KEY&player=NICKNAME&script=SCRIPT_NAME</div>
-            </div>
+        <!-- Список ссылок -->
+        <h3 style="color:#58a6ff;margin-bottom:10px;">📋 Созданные ссылки</h3>
+        <div id="linksContainer">
+            <div class="empty">Нет созданных ссылок</div>
+        </div>
+
+        <!-- API информация -->
+        <div class="api-info">
+            <strong>🔗 Как использовать в Roblox:</strong><br>
+            1. Скопируй ссылку из списка выше.<br>
+            2. Вставь её в менюшку в Roblox.<br>
+            3. Нажми "Загрузить" — скрипт выполнится.<br><br>
+            <strong>📌 Формат ссылки:</strong> <code>https://sasaburk091-commits.github.io/Api/?id=XXXXXXXX</code>
         </div>
     </div>
 
-    <!-- Модальное окно для просмотра скрипта -->
-    <div id="scriptModal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal()">&times;</button>
-            <h2 id="modal-title" style="color: #00ffff; margin-bottom: 15px;"></h2>
-            <div class="script-preview" id="modal-script"></div>
-            <div id="modal-stats" style="margin-top: 15px; color: #00ffff;"></div>
-        </div>
-    </div>
+    <div class="toast" id="toast">✅ Готово!</div>
 
     <script>
-        // ========== ИНИЦИАЛИЗАЦИЯ ==========
-        if (!localStorage.getItem('upnd_keys')) {
-            localStorage.setItem('upnd_keys', JSON.stringify([
-                {key: "und_demo", name: "Demo Script", script: "print('UPND MENU LOADED')", type: "permanent", created: Date.now()}
-            ]));
-        }
-        if (!localStorage.getItem('upnd_logs')) {
-            localStorage.setItem('upnd_logs', JSON.stringify([]));
+        // ================================================
+        // === ЛОГИКА ===
+        // ================================================
+
+        const STORAGE_KEY = 'upnd_links_data';
+        const BASE_URL = window.location.href.split('?')[0];
+
+        let links = [];
+
+        function loadData() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                links = data ? JSON.parse(data) : [];
+            } catch { links = []; }
         }
 
-        // Генерация звезд
-        function generateStars() {
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 50; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                starsContainer.appendChild(star);
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
+            renderLinks();
+        }
+
+        function generateId() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let id = '';
+            for (let i = 0; i < 8; i++) {
+                id += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return id;
+        }
+
+        function getExpirySeconds(type) {
+            const map = {
+                'hour': 3600,
+                'day': 86400,
+                'week': 604800,
+                'month': 2592000,
+                'never': Infinity
+            };
+            return map[type] || 3600;
+        }
+
+        function createLink() {
+            const name = document.getElementById('scriptName').value.trim();
+            const code = document.getElementById('scriptCode').value.trim();
+            const expiryType = document.getElementById('expiryType').value;
+            const maxUses = parseInt(document.getElementById('maxUses').value) || 0;
+
+            if (!name || !code) {
+                showToast('❌ Заполни название и код', true);
+                return;
+            }
+
+            const id = generateId();
+            const link = {
+                id: id,
+                name: name,
+                code: code,
+                createdAt: Date.now(),
+                expiryType: expiryType,
+                expiresAt: Date.now() + getExpirySeconds(expiryType) * 1000,
+                maxUses: maxUses,
+                uses: 0,
+                active: true
+            };
+
+            links.push(link);
+            saveData();
+
+            document.getElementById('scriptName').value = '';
+            document.getElementById('scriptCode').value = '';
+            document.getElementById('maxUses').value = '0';
+
+            const url = BASE_URL + '?id=' + id;
+            showToast('✅ Ссылка создана! Скопирована в буфер');
+            copyToClipboard(url);
+        }
+
+        function clearForm() {
+            document.getElementById('scriptName').value = '';
+            document.getElementById('scriptCode').value = '';
+            document.getElementById('maxUses').value = '0';
+        }
+
+        function deleteLink(id) {
+            if (!confirm('Удалить ссылку?')) return;
+            links = links.filter(l => l.id !== id);
+            saveData();
+            showToast('🗑️ Ссылка удалена');
+        }
+
+        function copyLink(id) {
+            const link = links.find(l => l.id === id);
+            if (!link) return;
+            const url = BASE_URL + '?id=' + id;
+            copyToClipboard(url);
+            showToast('📋 Ссылка скопирована');
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text);
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
             }
         }
-        generateStars();
 
-        // ========== ФУНКЦИИ ХРАНИЛИЩА ==========
-        function getKeys() { return JSON.parse(localStorage.getItem('upnd_keys')); }
-        function saveKeys(keys) { localStorage.setItem('upnd_keys', JSON.stringify(keys)); renderAll(); }
-        function getLogs() { return JSON.parse(localStorage.getItem('upnd_logs')); }
-        function saveLogs(logs) { localStorage.setItem('upnd_logs', JSON.stringify(logs)); }
-
-        // ========== УПРАВЛЕНИЕ КЛЮЧАМИ ==========
-        function addKey() {
-            const name = document.getElementById('new-name').value;
-            const key = 'und_' + document.getElementById('new-key').value;
-            const script = document.getElementById('new-code').value;
-
-            if (!name || !script) { alert('Заполните все поля'); return; }
-
-            const keys = getKeys();
-            if (keys.find(k => k.key === key)) { alert('Такой ключ уже существует'); return; }
-
-            keys.push({key, name, script, type: "permanent", created: Date.now()});
-            saveKeys(keys);
-            
-            document.getElementById('new-name').value = '';
-            document.getElementById('new-key').value = '';
-            document.getElementById('new-code').value = '';
-            alert('✅ Ключ добавлен!');
+        function showToast(msg, isError) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast' + (isError ? ' error' : '');
+            t.style.display = 'block';
+            clearTimeout(t._timeout);
+            t._timeout = setTimeout(() => { t.style.display = 'none'; }, 3000);
         }
 
-        function createTempKey() {
-            const name = document.getElementById('temp-name').value;
-            const script = document.getElementById('temp-code').value;
-            const days = parseInt(document.getElementById('temp-days').value);
-
-            if (!name || !script) { alert('Заполните все поля'); return; }
-
-            const tempKey = 'und_temp_' + Math.random().toString(36).substr(2, 9);
-            const expiryDate = Date.now() + (days * 24 * 60 * 60 * 1000);
-
-            const keys = getKeys();
-            keys.push({key: tempKey, name, script, type: "temporary", created: Date.now(), expiry: expiryDate, days});
-            saveKeys(keys);
-
-            document.getElementById('temp-name').value = '';
-            document.getElementById('temp-code').value = '';
-            alert('✅ Временный ключ создан!\n\n' + tempKey);
-        }
-
-        function deleteKey(index) {
-            if (confirm('Удалить этот ключ?')) {
-                const keys = getKeys();
-                keys.splice(index, 1);
-                saveKeys(keys);
-            }
-        }
-
-        // ========== ПРОВЕРКА ВРЕМЕННЫХ КЛЮЧЕЙ ==========
-        function checkExpiredKeys() {
-            const keys = getKeys();
+        function getStatus(link) {
             const now = Date.now();
-            const updated = keys.filter(k => {
-                if (k.type === 'temporary' && k.expiry < now) return false;
-                return true;
+            if (!link.active) return { text: 'Неактивна', cls: 'badge-expired' };
+            if (link.expiresAt <= now) return { text: 'Истекла', cls: 'badge-expired' };
+            if (link.maxUses > 0 && link.uses >= link.maxUses) return { text: 'Использована', cls: 'badge-expired' };
+            if (link.maxUses > 0) return { text: 'Осталось ' + (link.maxUses - link.uses), cls: 'badge-limited' };
+            return { text: 'Активна', cls: 'badge-active' };
+        }
+
+        function formatExpiry(link) {
+            const now = Date.now();
+            if (link.expiryType === 'never') return 'Никогда';
+            const diff = Math.floor((link.expiresAt - now) / 1000);
+            if (diff <= 0) return 'Истекла';
+            const hours = Math.floor(diff / 3600);
+            const minutes = Math.floor((diff % 3600) / 60);
+            if (hours > 24) return Math.floor(hours / 24) + ' дн.';
+            if (hours > 0) return hours + ' ч ' + minutes + ' мин';
+            return minutes + ' мин';
+        }
+
+        function renderLinks() {
+            const container = document.getElementById('linksContainer');
+            if (links.length === 0) {
+                container.innerHTML = '<div class="empty">Нет созданных ссылок</div>';
+                return;
+            }
+
+            let html = '<div class="link-list">';
+            links.forEach(l => {
+                const status = getStatus(l);
+                const url = BASE_URL + '?id=' + l.id;
+                html += `
+                    <div class="link-card">
+                        <div class="info">
+                            <span class="name">${escapeHtml(l.name)}</span>
+                            <span class="url">${escapeHtml(url)}</span>
+                            <span class="meta">Создана: ${new Date(l.createdAt).toLocaleString()} | Действует: ${formatExpiry(l)} | Использований: ${l.uses}</span>
+                            <span class="badge ${status.cls}">${status.text}</span>
+                        </div>
+                        <div class="actions">
+                            <button class="btn btn-secondary btn-sm" onclick="copyLink('${l.id}')">📋 Копировать</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteLink('${l.id}')">🗑️</button>
+                        </div>
+                    </div>
+                `;
             });
-            if (updated.length !== keys.length) saveKeys(updated);
+            html += '</div>';
+            container.innerHTML = html;
         }
 
-        // ========== РЕНДЕРИНГ ==========
-        function renderScripts() {
-            checkExpiredKeys();
-            const list = document.getElementById('scripts-list');
-            const keys = getKeys();
-            list.innerHTML = keys.map((k, i) => `
-                <div class="key-item">
-                    <div class="key-info">
-                        <div class="key-name">${k.name}</div>
-                        <div class="key-code">${k.key}</div>
-                        ${k.type === 'temporary' ? `<div class="key-expiry">⏰ Истекает: ${new Date(k.expiry).toLocaleDateString('ru-RU')}</div>` : ''}
-                    </div>
-                    <div class="key-actions">
-                        <button class="btn-small btn-view" onclick="viewScript(${i})">👁️ Просмотр</button>
-                    </div>
-                </div>
-            `).join('');
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
-        function renderKeys() {
-            checkExpiredKeys();
-            const list = document.getElementById('keys-list');
-            const keys = getKeys();
-            list.innerHTML = keys.map((k, i) => `
-                <div class="key-item">
-                    <div class="key-info">
-                        <div class="key-name">${k.name}</div>
-                        <div class="key-code">${k.key}</div>
-                        ${k.type === 'temporary' ? `<div class="key-expiry">⏰ Истекает: ${new Date(k.expiry).toLocaleDateString('ru-RU')}</div>` : '<div class="key-expiry">♾️ Постоянный</div>'}
-                    </div>
-                    <div class="key-actions">
-                        <button class="btn-small btn-view" onclick="viewScript(${i})">👁️ Просмотр</button>
-                        <button class="btn-small btn-delete" onclick="deleteKey(${i})">🗑️ Удалить</button>
-                    </div>
-                </div>
-            `).join('');
-        }
+        // === ОБРАБОТКА GET-ЗАПРОСОВ (API) ===
+        function handleApiRequest() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
 
-        function renderTempKeys() {
-            checkExpiredKeys();
-            const list = document.getElementById('temp-keys-list');
-            const keys = getKeys().filter(k => k.type === 'temporary');
-            if (keys.length === 0) {
-                list.innerHTML = '<p style="color: #ffff00;">Временных ключей нет</p>';
-                return;
-            }
-            list.innerHTML = keys.map((k, i) => `
-                <div class="key-item">
-                    <div class="key-info">
-                        <div class="key-name">${k.name}</div>
-                        <div class="key-code">${k.key}</div>
-                        <div class="key-expiry">⏰ Истекает: ${new Date(k.expiry).toLocaleDateString('ru-RU')} (осталось ${Math.ceil((k.expiry - Date.now()) / (24 * 60 * 60 * 1000))} дней)</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderStats() {
-            const logs = getLogs();
-            const uniquePlayers = new Set(logs.map(l => l.player)).size;
-            
-            document.getElementById('total-activations').textContent = logs.length;
-            document.getElementById('unique-players').textContent = uniquePlayers;
-            document.getElementById('active-keys').textContent = getKeys().length;
-
-            const logsList = document.getElementById('logs-list');
-            if (logs.length === 0) {
-                logsList.innerHTML = '<p style="color: #ffff00;">Логов нет</p>';
-                return;
-            }
-            logsList.innerHTML = logs.slice().reverse().map(log => `
-                <div class="log-entry">
-                    <span class="log-player">🎮 ${log.player}</span> активировал 
-                    <span class="log-script">${log.script}</span>
-                    <br><span class="log-time">⏱️ ${new Date(log.time).toLocaleString('ru-RU')}</span>
-                </div>
-            `).join('');
-        }
-
-        function renderAll() {
-            renderScripts();
-            renderKeys();
-            renderTempKeys();
-            renderStats();
-        }
-
-        function openTab(tabId) {
-            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        function viewScript(index) {
-            const keys = getKeys();
-            const key = keys[index];
-            const logs = getLogs().filter(l => l.script === key.name);
-
-            document.getElementById('modal-title').textContent = '📜 ' + key.name;
-            document.getElementById('modal-script').textContent = key.script;
-            document.getElementById('modal-stats').innerHTML = `
-                <strong>📊 Статистика:</strong><br>
-                Активаций: <span style="color: #ff00ff;">${logs.length}</span><br>
-                Уникальных игроков: <span style="color: #00ffff;">${new Set(logs.map(l => l.player)).size}</span>
-            `;
-            document.getElementById('scriptModal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('scriptModal').classList.remove('active');
-        }
-
-        // ========== API ОБРАБОТКА ==========
-        function handleAPI() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const action = urlParams.get('action');
-            const keyParam = urlParams.get('key');
-            const player = urlParams.get('player');
-            const script = urlParams.get('script');
-
-            if (action) {
-                let response = { success: false, message: "Invalid Request" };
-
-                if (action === 'ping') {
-                    response = { success: true };
-                } else if (action === 'check' && keyParam) {
-                    checkExpiredKeys();
-                    const keys = getKeys();
-                    const found = keys.find(k => k.key === keyParam);
-                    if (found) {
-                        response = { success: true, script: found.script, name: found.name };
-                    } else {
-                        response = { success: false, message: "Неверный ключ" };
-                    }
-                } else if (action === 'log' && keyParam && player && script) {
-                    const logs = getLogs();
-                    logs.push({ key: keyParam, player, script, time: Date.now() });
-                    saveLogs(logs);
-                    response = { success: true, message: "Logged" };
+            if (id) {
+                const link = links.find(l => l.id === id);
+                if (!link) {
+                    document.body.innerHTML = '❌ Ссылка не найдена';
+                    return true;
                 }
 
-                document.body.innerHTML = JSON.stringify(response);
-                document.body.style = "background:white; color:black; padding:20px; font-family:monospace; white-space:pre;";
+                if (link.expiresAt <= Date.now()) {
+                    link.active = false;
+                    saveData();
+                    document.body.innerHTML = '❌ Срок действия ссылки истек';
+                    return true;
+                }
+
+                if (link.maxUses > 0 && link.uses >= link.maxUses) {
+                    link.active = false;
+                    saveData();
+                    document.body.innerHTML = '❌ Лимит использований исчерпан';
+                    return true;
+                }
+
+                link.uses += 1;
+                saveData();
+
+                document.body.innerHTML = link.code;
+                return true;
             }
+
+            return false;
         }
 
-        window.onload = () => { renderAll(); handleAPI(); };
-        setInterval(checkExpiredKeys, 60000);
+        // === ЗАПУСК ===
+        loadData();
+        renderLinks();
+
+        if (!handleApiRequest()) {
+            // Показываем интерфейс
+        }
+
+        console.log('✅ UPND LINK загружен!');
+        console.log('📌 Ссылки создаются с ID из 8 символов');
+        console.log('📌 Всего ссылок: ' + links.length);
     </script>
 </body>
 </html>
