@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPND LINK — Генератор ссылок</title>
+    <title>UPND TEST — проверка подключения</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -17,211 +17,153 @@
             align-items: center;
         }
         .container {
-            max-width: 800px;
+            max-width: 500px;
             width: 100%;
             background: #161b22;
             border-radius: 16px;
             padding: 30px;
             border: 1px solid #30363d;
+            text-align: center;
         }
         h1 {
-            text-align: center;
             color: #58a6ff;
             font-size: 32px;
             margin-bottom: 5px;
         }
         .subtitle {
-            text-align: center;
             color: #8b949e;
             font-size: 14px;
             margin-bottom: 25px;
         }
-        .input-group {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        .input-group input, .input-group textarea, .input-group select {
-            flex: 1;
-            min-width: 200px;
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            color: #c9d1d9;
-            padding: 12px 16px;
-            font-size: 14px;
-            outline: none;
-        }
-        .input-group textarea {
-            min-height: 120px;
-            resize: vertical;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-        }
-        .input-group input:focus, .input-group textarea:focus {
-            border-color: #58a6ff;
-        }
         .btn {
-            padding: 10px 24px;
+            padding: 14px 40px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 700;
             transition: 0.3s;
-            white-space: nowrap;
-        }
-        .btn-primary { background: #238636; color: white; }
-        .btn-primary:hover { background: #2ea043; }
-        .btn-danger { background: #da3633; color: white; }
-        .btn-danger:hover { background: #f85149; }
-        .btn-secondary { background: #21262d; color: #c9d1d9; }
-        .btn-secondary:hover { background: #30363d; }
-        .btn-sm { padding: 4px 12px; font-size: 12px; }
-        .link-list {
-            display: grid;
-            gap: 12px;
-            margin-top: 20px;
-        }
-        .link-card {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .link-card .info { display: flex; flex-direction: column; gap: 4px; }
-        .link-card .name { font-weight: 700; color: #58a6ff; font-size: 16px; }
-        .link-card .url {
-            font-family: 'Courier New', monospace;
-            color: #f0883e;
-            font-size: 13px;
-            word-break: break-all;
-        }
-        .link-card .meta {
-            font-size: 12px;
-            color: #8b949e;
-        }
-        .link-card .actions { display: flex; gap: 6px; flex-wrap: wrap; }
-        .empty { text-align: center; color: #8b949e; padding: 40px 0; font-size: 16px; }
-        .toast {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            padding: 14px 28px;
-            border-radius: 12px;
             background: #238636;
             color: white;
-            display: none;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-            z-index: 999;
-            font-weight: 500;
+            width: 100%;
         }
-        .toast.error { background: #da3633; }
-        .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
+        .btn:hover { background: #2ea043; }
+        .btn:active { transform: scale(0.97); }
+        .btn-secondary {
+            background: #21262d;
+            margin-top: 10px;
         }
-        .badge-active { background: #238636; color: white; }
-        .badge-expired { background: #da3633; color: white; }
-        .badge-limited { background: #d29922; color: #0d1117; }
-        .row { display: flex; gap: 10px; flex-wrap: wrap; }
-        .row .input-group { flex: 1; }
-        .api-info {
+        .btn-secondary:hover { background: #30363d; }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
             background: #0d1117;
-            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid #30363d;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #f0883e;
+            min-height: 50px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+        .status.show { display: block; }
+        .status.success { background: #1c3a2a; color: #3fb950; border: 1px solid #238636; }
+        .status.error { background: #3a1c1c; color: #f85149; border: 1px solid #da3633; }
+        .copy-btn {
+            background: #21262d;
+            border: none;
+            color: #8b949e;
+            padding: 4px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        .copy-btn:hover { background: #30363d; color: white; }
+        .footer {
+            margin-top: 25px;
+            color: #8b949e;
+            font-size: 12px;
+            border-top: 1px solid #30363d;
+            padding-top: 15px;
+        }
+        .test-script {
+            background: #0d1117;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid #30363d;
-            margin-top: 15px;
-            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
             color: #8b949e;
+            text-align: left;
+            margin-top: 15px;
+            display: none;
         }
-        .api-info code {
-            color: #f0883e;
-            background: #1c1c2e;
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
+        .test-script.show { display: block; }
+        .test-script code { color: #58a6ff; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔗 UPND LINK</h1>
-        <p class="subtitle">Создавай ссылки на скрипты для Roblox</p>
+        <h1>🔗 UPND TEST</h1>
+        <p class="subtitle">Проверка подключения между сайтом и Roblox</p>
 
-        <!-- Форма создания -->
-        <div style="background:#0d1117;border-radius:12px;padding:20px;border:1px solid #30363d;margin-bottom:20px;">
-            <h3 style="color:#58a6ff;margin-bottom:15px;">📝 Создать ссылку</h3>
-            <div class="input-group">
-                <input type="text" id="scriptName" placeholder="Название скрипта (например, Speed 50)">
-            </div>
-            <div class="input-group">
-                <textarea id="scriptCode" placeholder="Вставь Lua-код скрипта..."></textarea>
-            </div>
-            <div class="row">
-                <div class="input-group">
-                    <select id="expiryType">
-                        <option value="hour">1 час</option>
-                        <option value="day">1 день</option>
-                        <option value="week">1 неделя</option>
-                        <option value="month">1 месяц</option>
-                        <option value="never">Никогда</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="maxUses" placeholder="Макс. использований (0=безлимит)" value="0" min="0">
-                </div>
-            </div>
-            <button class="btn btn-primary" onclick="createLink()">🔗 Создать ссылку</button>
-            <button class="btn btn-secondary" onclick="clearForm()" style="margin-left:8px;">🗑️ Очистить</button>
+        <button class="btn" onclick="generateTestLink()">🎲 Сгенерировать тестовую ссылку</button>
+        <button class="btn btn-secondary" onclick="clearAll()">🗑️ Очистить</button>
+
+        <div class="result-box" id="resultBox">
+            <div id="resultLink"></div>
+            <button class="copy-btn" onclick="copyLink()">📋 Копировать</button>
         </div>
 
-        <!-- Список ссылок -->
-        <h3 style="color:#58a6ff;margin-bottom:10px;">📋 Созданные ссылки</h3>
-        <div id="linksContainer">
-            <div class="empty">Нет созданных ссылок</div>
+        <div class="test-script" id="testScript">
+            <strong>📌 Тестовый скрипт для Roblox:</strong><br>
+            <code id="testCode">-- Тестовый скрипт</code>
         </div>
 
-        <!-- API информация -->
-        <div class="api-info">
-            <strong>🔗 Как использовать в Roblox:</strong><br>
-            1. Скопируй ссылку из списка выше.<br>
-            2. Вставь её в менюшку в Roblox.<br>
-            3. Нажми "Загрузить" — скрипт выполнится.<br><br>
-            <strong>📌 Формат ссылки:</strong> <code>https://sasaburk091-commits.github.io/Api/?id=XXXXXXXX</code>
+        <div class="status" id="status"></div>
+
+        <div class="footer">
+            🔗 Ссылка работает: <span id="linkStatus">⏳ ожидание</span>
         </div>
     </div>
 
-    <div class="toast" id="toast">✅ Готово!</div>
-
     <script>
         // ================================================
-        // === ЛОГИКА ===
+        // === ТЕСТОВАЯ ЛОГИКА ===
         // ================================================
 
-        const STORAGE_KEY = 'upnd_links_data';
         const BASE_URL = window.location.href.split('?')[0];
+        let currentLink = '';
 
-        let links = [];
-
-        function loadData() {
-            try {
-                const data = localStorage.getItem(STORAGE_KEY);
-                links = data ? JSON.parse(data) : [];
-            } catch { links = []; }
-        }
-
-        function saveData() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
-            renderLinks();
+        // === ГЕНЕРАЦИЯ ТЕСТОВОЙ ССЫЛКИ ===
+        function generateTestLink() {
+            const id = generateId();
+            currentLink = BASE_URL + '?id=' + id;
+            
+            // Показываем ссылку
+            document.getElementById('resultLink').textContent = currentLink;
+            document.getElementById('resultBox').classList.add('show');
+            
+            // Показываем тестовый скрипт
+            const testScript = `-- Тестовый скрипт UPND\nprint("✅ Подключение работает!")\nprint("📌 ID: ${id}")\nprint("📌 Время: " .. os.time())`;
+            document.getElementById('testCode').textContent = testScript;
+            document.getElementById('testScript').classList.add('show');
+            
+            // Обновляем статус
+            document.getElementById('linkStatus').textContent = '✅ создана';
+            document.getElementById('linkStatus').style.color = '#3fb950';
+            
+            showStatus('✅ Тестовая ссылка создана! Вставь её в Roblox', 'success');
         }
 
         function generateId() {
@@ -233,72 +175,12 @@
             return id;
         }
 
-        function getExpirySeconds(type) {
-            const map = {
-                'hour': 3600,
-                'day': 86400,
-                'week': 604800,
-                'month': 2592000,
-                'never': Infinity
-            };
-            return map[type] || 3600;
-        }
-
-        function createLink() {
-            const name = document.getElementById('scriptName').value.trim();
-            const code = document.getElementById('scriptCode').value.trim();
-            const expiryType = document.getElementById('expiryType').value;
-            const maxUses = parseInt(document.getElementById('maxUses').value) || 0;
-
-            if (!name || !code) {
-                showToast('❌ Заполни название и код', true);
-                return;
+        // === КОПИРОВАНИЕ ===
+        function copyLink() {
+            if (currentLink) {
+                copyToClipboard(currentLink);
+                showStatus('📋 Ссылка скопирована!', 'success');
             }
-
-            const id = generateId();
-            const link = {
-                id: id,
-                name: name,
-                code: code,
-                createdAt: Date.now(),
-                expiryType: expiryType,
-                expiresAt: Date.now() + getExpirySeconds(expiryType) * 1000,
-                maxUses: maxUses,
-                uses: 0,
-                active: true
-            };
-
-            links.push(link);
-            saveData();
-
-            document.getElementById('scriptName').value = '';
-            document.getElementById('scriptCode').value = '';
-            document.getElementById('maxUses').value = '0';
-
-            const url = BASE_URL + '?id=' + id;
-            showToast('✅ Ссылка создана! Скопирована в буфер');
-            copyToClipboard(url);
-        }
-
-        function clearForm() {
-            document.getElementById('scriptName').value = '';
-            document.getElementById('scriptCode').value = '';
-            document.getElementById('maxUses').value = '0';
-        }
-
-        function deleteLink(id) {
-            if (!confirm('Удалить ссылку?')) return;
-            links = links.filter(l => l.id !== id);
-            saveData();
-            showToast('🗑️ Ссылка удалена');
-        }
-
-        function copyLink(id) {
-            const link = links.find(l => l.id === id);
-            if (!link) return;
-            const url = BASE_URL + '?id=' + id;
-            copyToClipboard(url);
-            showToast('📋 Ссылка скопирована');
         }
 
         function copyToClipboard(text) {
@@ -314,102 +196,46 @@
             }
         }
 
-        function showToast(msg, isError) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.className = 'toast' + (isError ? ' error' : '');
-            t.style.display = 'block';
-            clearTimeout(t._timeout);
-            t._timeout = setTimeout(() => { t.style.display = 'none'; }, 3000);
+        // === СТАТУС ===
+        function showStatus(msg, type) {
+            const el = document.getElementById('status');
+            el.textContent = msg;
+            el.className = 'status show ' + type;
+            setTimeout(() => {
+                el.classList.remove('show');
+            }, 5000);
         }
 
-        function getStatus(link) {
-            const now = Date.now();
-            if (!link.active) return { text: 'Неактивна', cls: 'badge-expired' };
-            if (link.expiresAt <= now) return { text: 'Истекла', cls: 'badge-expired' };
-            if (link.maxUses > 0 && link.uses >= link.maxUses) return { text: 'Использована', cls: 'badge-expired' };
-            if (link.maxUses > 0) return { text: 'Осталось ' + (link.maxUses - link.uses), cls: 'badge-limited' };
-            return { text: 'Активна', cls: 'badge-active' };
+        function clearAll() {
+            document.getElementById('resultBox').classList.remove('show');
+            document.getElementById('testScript').classList.remove('show');
+            document.getElementById('status').classList.remove('show');
+            document.getElementById('linkStatus').textContent = '⏳ ожидание';
+            document.getElementById('linkStatus').style.color = '#8b949e';
+            currentLink = '';
         }
 
-        function formatExpiry(link) {
-            const now = Date.now();
-            if (link.expiryType === 'never') return 'Никогда';
-            const diff = Math.floor((link.expiresAt - now) / 1000);
-            if (diff <= 0) return 'Истекла';
-            const hours = Math.floor(diff / 3600);
-            const minutes = Math.floor((diff % 3600) / 60);
-            if (hours > 24) return Math.floor(hours / 24) + ' дн.';
-            if (hours > 0) return hours + ' ч ' + minutes + ' мин';
-            return minutes + ' мин';
-        }
-
-        function renderLinks() {
-            const container = document.getElementById('linksContainer');
-            if (links.length === 0) {
-                container.innerHTML = '<div class="empty">Нет созданных ссылок</div>';
-                return;
-            }
-
-            let html = '<div class="link-list">';
-            links.forEach(l => {
-                const status = getStatus(l);
-                const url = BASE_URL + '?id=' + l.id;
-                html += `
-                    <div class="link-card">
-                        <div class="info">
-                            <span class="name">${escapeHtml(l.name)}</span>
-                            <span class="url">${escapeHtml(url)}</span>
-                            <span class="meta">Создана: ${new Date(l.createdAt).toLocaleString()} | Действует: ${formatExpiry(l)} | Использований: ${l.uses}</span>
-                            <span class="badge ${status.cls}">${status.text}</span>
-                        </div>
-                        <div class="actions">
-                            <button class="btn btn-secondary btn-sm" onclick="copyLink('${l.id}')">📋 Копировать</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteLink('${l.id}')">🗑️</button>
-                        </div>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            container.innerHTML = html;
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // === ОБРАБОТКА GET-ЗАПРОСОВ (API) ===
+        // === ОБРАБОТКА GET-ЗАПРОСОВ (API для Roblox) ===
         function handleApiRequest() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
 
             if (id) {
-                const link = links.find(l => l.id === id);
-                if (!link) {
-                    document.body.innerHTML = '❌ Ссылка не найдена';
-                    return true;
-                }
+                // Тестовый скрипт, который возвращается в Roblox
+                const testScript = `-- Тестовый скрипт UPND
+print("✅ Подключение работает!")
+print("📌 ID: ${id}")
+print("📌 Время: " .. os.time())
+print("📌 Сайт отвечает правильно!")
 
-                if (link.expiresAt <= Date.now()) {
-                    link.active = false;
-                    saveData();
-                    document.body.innerHTML = '❌ Срок действия ссылки истек';
-                    return true;
-                }
-
-                if (link.maxUses > 0 && link.uses >= link.maxUses) {
-                    link.active = false;
-                    saveData();
-                    document.body.innerHTML = '❌ Лимит использований исчерпан';
-                    return true;
-                }
-
-                link.uses += 1;
-                saveData();
-
-                document.body.innerHTML = link.code;
+-- Проверка скорости
+local start = tick()
+for i = 1, 10 do
+    task.wait()
+end
+print("⏱️ Задержка: " .. (tick() - start) .. " сек")
+`;
+                document.body.textContent = testScript;
                 return true;
             }
 
@@ -417,16 +243,13 @@
         }
 
         // === ЗАПУСК ===
-        loadData();
-        renderLinks();
-
         if (!handleApiRequest()) {
             // Показываем интерфейс
         }
 
-        console.log('✅ UPND LINK загружен!');
-        console.log('📌 Ссылки создаются с ID из 8 символов');
-        console.log('📌 Всего ссылок: ' + links.length);
+        console.log('✅ UPND TEST загружен!');
+        console.log('📌 Нажми кнопку для генерации тестовой ссылки');
+        console.log('📌 Вставь ссылку в Roblox и проверь подключение');
     </script>
 </body>
 </html>
