@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPND TEST — проверка подключения</title>
+    <title>UPND TEST — генератор ссылок для Roblox</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -17,7 +17,7 @@
             align-items: center;
         }
         .container {
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
             background: #161b22;
             border-radius: 16px;
@@ -25,16 +25,8 @@
             border: 1px solid #30363d;
             text-align: center;
         }
-        h1 {
-            color: #58a6ff;
-            font-size: 32px;
-            margin-bottom: 5px;
-        }
-        .subtitle {
-            color: #8b949e;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
+        h1 { color: #58a6ff; font-size: 32px; margin-bottom: 5px; }
+        .subtitle { color: #8b949e; font-size: 14px; margin-bottom: 25px; }
         .btn {
             padding: 14px 40px;
             border: none;
@@ -49,10 +41,7 @@
         }
         .btn:hover { background: #2ea043; }
         .btn:active { transform: scale(0.97); }
-        .btn-secondary {
-            background: #21262d;
-            margin-top: 10px;
-        }
+        .btn-secondary { background: #21262d; margin-top: 10px; }
         .btn-secondary:hover { background: #30363d; }
         .result-box {
             margin-top: 20px;
@@ -62,12 +51,23 @@
             border: 1px solid #30363d;
             word-break: break-all;
             font-family: 'Courier New', monospace;
-            font-size: 14px;
+            font-size: 13px;
             color: #f0883e;
             min-height: 50px;
             display: none;
+            text-align: left;
         }
         .result-box.show { display: block; }
+        .result-box .label {
+            color: #8b949e;
+            font-size: 11px;
+            margin-bottom: 5px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .result-box .link {
+            color: #58a6ff;
+            word-break: break-all;
+        }
         .status {
             margin-top: 15px;
             padding: 10px;
@@ -82,20 +82,15 @@
             background: #21262d;
             border: none;
             color: #8b949e;
-            padding: 4px 14px;
+            padding: 6px 16px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 12px;
             margin-top: 8px;
+            transition: 0.3s;
         }
         .copy-btn:hover { background: #30363d; color: white; }
-        .footer {
-            margin-top: 25px;
-            color: #8b949e;
-            font-size: 12px;
-            border-top: 1px solid #30363d;
-            padding-top: 15px;
-        }
+        .footer { margin-top: 25px; color: #8b949e; font-size: 12px; border-top: 1px solid #30363d; padding-top: 15px; }
         .test-script {
             background: #0d1117;
             padding: 12px;
@@ -107,63 +102,112 @@
             text-align: left;
             margin-top: 15px;
             display: none;
+            max-height: 200px;
+            overflow: auto;
         }
         .test-script.show { display: block; }
         .test-script code { color: #58a6ff; }
+        .proxy-hint {
+            background: #1c1c2e;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border-left: 3px solid #f0883e;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #c9d1d9;
+            text-align: left;
+        }
+        .proxy-hint strong { color: #58a6ff; }
+        .two-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .two-btns .btn { width: 50%; padding: 10px; font-size: 14px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🔗 UPND TEST</h1>
-        <p class="subtitle">Проверка подключения между сайтом и Roblox</p>
+        <p class="subtitle">Создаёт готовые ссылки для Roblox</p>
 
-        <button class="btn" onclick="generateTestLink()">🎲 Сгенерировать тестовую ссылку</button>
+        <div class="proxy-hint">
+            📌 <strong>Как работает:</strong> Сайт создаёт ссылку с прокси
+            <br><code>https://api.allorigins.win/raw?url=ТВОЯ_ССЫЛКА</code>
+            <br>→ Вставляешь в Roblox → Работает!
+        </div>
+
+        <button class="btn" onclick="generateTestLink()">🎲 Сгенерировать ссылку для Roblox</button>
         <button class="btn btn-secondary" onclick="clearAll()">🗑️ Очистить</button>
 
         <div class="result-box" id="resultBox">
-            <div id="resultLink"></div>
+            <div class="label">📋 Вставь ЭТУ ссылку в Roblox:</div>
+            <div class="link" id="resultLink"></div>
             <button class="copy-btn" onclick="copyLink()">📋 Копировать</button>
         </div>
 
         <div class="test-script" id="testScript">
-            <strong>📌 Тестовый скрипт для Roblox:</strong><br>
+            <strong>📌 Код для теста в Roblox:</strong><br>
             <code id="testCode">-- Тестовый скрипт</code>
         </div>
 
         <div class="status" id="status"></div>
 
         <div class="footer">
-            🔗 Ссылка работает: <span id="linkStatus">⏳ ожидание</span>
+            🔗 Ссылка создана: <span id="linkStatus">⏳ ожидание</span>
         </div>
     </div>
 
     <script>
         // ================================================
-        // === ТЕСТОВАЯ ЛОГИКА ===
+        // === ЛОГИКА ===
         // ================================================
 
         const BASE_URL = window.location.href.split('?')[0];
+        const PROXY_URL = "https://api.allorigins.win/raw?url=";
         let currentLink = '';
+        let currentProxyLink = '';
 
-        // === ГЕНЕРАЦИЯ ТЕСТОВОЙ ССЫЛКИ ===
         function generateTestLink() {
             const id = generateId();
             currentLink = BASE_URL + '?id=' + id;
+            currentProxyLink = PROXY_URL + encodeURIComponent(currentLink);
             
-            // Показываем ссылку
-            document.getElementById('resultLink').textContent = currentLink;
+            // Показываем ссылку для Roblox
+            document.getElementById('resultLink').textContent = currentProxyLink;
             document.getElementById('resultBox').classList.add('show');
             
-            // Показываем тестовый скрипт
-            const testScript = `-- Тестовый скрипт UPND\nprint("✅ Подключение работает!")\nprint("📌 ID: ${id}")\nprint("📌 Время: " .. os.time())`;
+            // Тестовый скрипт для Roblox
+            const testScript = `-- ✅ UPND TEST
+local HttpService = game:GetService("HttpService")
+
+-- Вставь эту ссылку в Roblox
+local url = "${currentProxyLink}"
+
+local success, response = pcall(function()
+    return HttpService:GetAsync(url, true)
+end)
+
+if success then
+    print("✅ Подключение работает!")
+    print("📌 Ответ сервера:")
+    print(response)
+    local func = loadstring(response)
+    if func then
+        func()
+        print("✅ Тестовый скрипт выполнен!")
+    end
+else
+    print("❌ Ошибка подключения!")
+    warn("Проверь ссылку или интернет")
+end`;
             document.getElementById('testCode').textContent = testScript;
             document.getElementById('testScript').classList.add('show');
             
-            // Обновляем статус
-            document.getElementById('linkStatus').textContent = '✅ создана';
+            document.getElementById('linkStatus').textContent = '✅ готова';
             document.getElementById('linkStatus').style.color = '#3fb950';
             
-            showStatus('✅ Тестовая ссылка создана! Вставь её в Roblox', 'success');
+            showStatus('✅ Ссылка создана! Вставь её в Roblox', 'success');
         }
 
         function generateId() {
@@ -175,11 +219,10 @@
             return id;
         }
 
-        // === КОПИРОВАНИЕ ===
         function copyLink() {
-            if (currentLink) {
-                copyToClipboard(currentLink);
-                showStatus('📋 Ссылка скопирована!', 'success');
+            if (currentProxyLink) {
+                copyToClipboard(currentProxyLink);
+                showStatus('📋 Ссылка скопирована! Вставь в Roblox', 'success');
             }
         }
 
@@ -196,7 +239,6 @@
             }
         }
 
-        // === СТАТУС ===
         function showStatus(msg, type) {
             const el = document.getElementById('status');
             el.textContent = msg;
@@ -213,6 +255,7 @@
             document.getElementById('linkStatus').textContent = '⏳ ожидание';
             document.getElementById('linkStatus').style.color = '#8b949e';
             currentLink = '';
+            currentProxyLink = '';
         }
 
         // === ОБРАБОТКА GET-ЗАПРОСОВ (API для Roblox) ===
@@ -221,20 +264,12 @@
             const id = params.get('id');
 
             if (id) {
-                // Тестовый скрипт, который возвращается в Roblox
                 const testScript = `-- Тестовый скрипт UPND
 print("✅ Подключение работает!")
 print("📌 ID: ${id}")
 print("📌 Время: " .. os.time())
 print("📌 Сайт отвечает правильно!")
-
--- Проверка скорости
-local start = tick()
-for i = 1, 10 do
-    task.wait()
-end
-print("⏱️ Задержка: " .. (tick() - start) .. " сек")
-`;
+print("🎉 Ты успешно подключился к UPND!")`;
                 document.body.textContent = testScript;
                 return true;
             }
@@ -248,8 +283,8 @@ print("⏱️ Задержка: " .. (tick() - start) .. " сек")
         }
 
         console.log('✅ UPND TEST загружен!');
-        console.log('📌 Нажми кнопку для генерации тестовой ссылки');
-        console.log('📌 Вставь ссылку в Roblox и проверь подключение');
+        console.log('📌 Ссылки создаются с прокси для Roblox');
+        console.log('📌 Нажми кнопку для генерации');
     </script>
 </body>
 </html>
