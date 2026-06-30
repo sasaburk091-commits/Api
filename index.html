@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPND MENU — Key System</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 30px 0 20px;
+            border-bottom: 2px solid #30363d;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 42px;
+            background: linear-gradient(135deg, #58a6ff, #f0883e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+        .header p {
+            color: #8b949e;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #21262d;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #58a6ff;
+            margin-top: 8px;
+            border: 1px solid #30363d;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: #21262d;
+            border: none;
+            color: #8b949e;
+            padding: 10px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .tab-btn.active {
+            background: #58a6ff;
+            color: #0d1117;
+        }
+        .tab-btn:hover { background: #30363d; }
+        .tab-content {
+            display: none;
+            background: #161b22;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #30363d;
+        }
+        .tab-content.active { display: block; }
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .input-group input, .input-group textarea {
+            flex: 1;
+            min-width: 200px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            color: #c9d1d9;
+            padding: 12px 16px;
+            font-size: 14px;
+            outline: none;
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: #58a6ff;
+        }
+        .input-group textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .btn-primary { background: #238636; color: white; }
+        .btn-primary:hover { background: #2ea043; }
+        .btn-danger { background: #da3633; color: white; }
+        .btn-danger:hover { background: #f85149; }
+        .btn-secondary { background: #21262d; color: #c9d1d9; }
+        .btn-secondary:hover { background: #30363d; }
+        .btn-warning { background: #d29922; color: #0d1117; }
+        .btn-warning:hover { background: #e3b341; }
+        .btn-sm { padding: 5px 12px; font-size: 12px; }
+        .script-list { display: grid; gap: 12px; margin-top: 15px; }
+        .script-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .script-card .info { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .script-card .name { font-weight: 700; color: #58a6ff; font-size: 16px; }
+        .script-card .key {
+            font-family: 'Courier New', monospace;
+            color: #f0883e;
+            background: #1c1c2e;
+            padding: 3px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            border: 1px solid #30363d;
+        }
+        .script-card .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+        .empty { text-align: center; color: #8b949e; padding: 40px 0; font-size: 16px; }
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            background: #238636;
+            color: white;
+            display: none;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            z-index: 999;
+            font-weight: 500;
+        }
+        .toast.error { background: #da3633; }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 998;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: #161b22;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #30363d;
+            max-height: 80vh;
+        }
+        .modal h2 { color: #58a6ff; margin-bottom: 15px; }
+        .modal pre {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 8px;
+            overflow: auto;
+            max-height: 300px;
+            font-size: 12px;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .modal .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px; }
+        .key-display {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 22px;
+            text-align: center;
+            color: #f0883e;
+            border: 1px solid #30363d;
+            margin: 10px 0;
+            word-break: break-all;
+            letter-spacing: 1px;
+        }
+        .copy-btn {
+            background: #21262d;
+            border: none;
+            color: #8b949e;
+            padding: 4px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover { background: #30363d; color: white; }
+        .api-url {
+            background: #0d1117;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #8b949e;
+            border: 1px solid #30363d;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+        .badge-key { 
+            display: inline-block; 
+            padding: 2px 12px; 
+            border-radius: 12px; 
+            font-size: 11px; 
+            font-weight: 600;
+            background: #238636;
+            color: white;
+        }
+        .stats-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: #0d1117;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid #30363d;
+        }
+        .stat-box span { color: #8b949e; font-size: 13px; }
+        .stat-box strong { color: #58a6ff; font-size: 20px; display: block; }
+        .prefix-info {
+            background: #1c1c2e;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #f0883e;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            border: 1px solid #30363d;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔑 UPND MENU</h1>
+            <p>Система управления ключами для Roblox</p>
+            <div class="badge">⚡ Все ключи начинаются с <strong>und_</strong></div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="scripts">📜 Скрипты</button>
+            <button class="tab-btn" data-tab="add">➕ Добавить</button>
+            <button class="tab-btn" data-tab="keys">🔑 Все ключи</button>
+            <button class="tab-btn" data-tab="api">🔗 API</button>
+        </div>
+
+        <!-- Список скриптов -->
+        <div class="tab-content active" id="tab-scripts">
+            <div class="stats-row" id="statsRow">
+                <div class="stat-box"><span>Всего скриптов</span><strong id="totalScripts">0</strong></div>
+                <div class="stat-box"><span>Всего ключей</span><strong id="totalKeys">0</strong></div>
+            </div>
+            <div id="scriptsContainer"><div class="empty">📭 Нет скриптов. Добавь первый!</div></div>
+        </div>
+
+        <!-- Добавление -->
+        <div class="tab-content" id="tab-add">
+            <h3 style="color:#58a6ff;margin-bottom:15px;">📝 Новый скрипт</h3>
+            <div class="prefix-info">🔑 Ключ будет начинаться с: <strong>und_</strong></div>
+            <div class="input-group">
+                <input type="text" id="scriptName" placeholder="Название скрипта (например, AutoFarm)">
+            </div>
+            <div class="input-group">
+                <textarea id="scriptCode" placeholder="Вставь сюда Lua-код скрипта..."></textarea>
+            </div>
+            <div class="input-group">
+                <input type="text" id="customKey" placeholder="Свой ключ (оставь пустым для генерации)">
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+                <button class="btn btn-primary" onclick="addScript()">💾 Сохранить</button>
+                <button class="btn btn-secondary" onclick="generateKeyField()">🎲 Сгенерировать ключ</button>
+            </div>
+            <div id="generatedKeyDisplay" style="display:none;">
+                <div class="key-display" id="generatedKey"></div>
+                <button class="copy-btn" onclick="copyGeneratedKey()">📋 Копировать</button>
+            </div>
+        </div>
+
+        <!-- Все ключи -->
+        <div class="tab-content" id="tab-keys">
+            <div id="keysContainer"><div class="empty">🔑 Список ключей</div></div>
+        </div>
+
+        <!-- API -->
+        <div class="tab-content" id="tab-api">
+            <h3 style="color:#58a6ff;margin-bottom:15px;">🔗 API для Roblox</h3>
+            <p style="color:#8b949e;margin-bottom:10px;">URL для проверки ключей (GET-запрос):</p>
+            <div class="api-url" id="apiUrlDisplay">https://твой-сайт.github.io/repo/index.html?action=check&key=und_ВАШ_КЛЮЧ</div>
+            <button class="copy-btn" onclick="copyApiUrl()">📋 Копировать</button>
+            <p style="color:#8b949e;margin-top:15px;font-size:13px;">
+                📌 Ответ: <code>{"success":true,"script":"код_скрипта","name":"Название"}</code> или <code>{"success":false}</code>
+            </p>
+            <p style="color:#8b949e;font-size:13px;">
+                📌 В Roblox используй: <code>HttpService:GetAsync(URL)</code>
+            </p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">✅ Готово!</div>
+
+    <div class="modal-overlay" id="scriptModal">
+        <div class="modal">
+            <h2 id="modalTitle">📜 Скрипт</h2>
+            <pre id="modalCode"></pre>
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Закрыть</button>
+                <button class="btn btn-primary" onclick="copyModalCode()">📋 Копировать</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================
+        // === ПОЛНАЯ ЛОГИКА ===
+        // ================================================
+
+        const STORAGE_KEY = 'upnd_scripts_data';
+        const KEY_PREFIX = 'und_';
+        let scripts = [];
+        let currentModalScript = null;
+        let lastGeneratedKey = '';
+
+        function loadData() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                scripts = data ? JSON.parse(data) : [];
+            } catch { scripts = []; }
+        }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(scripts));
+            renderAll();
+        }
+
+        function generateKey(length) {
+            length = length || 14;
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let key = '';
+            for (let i = 0; i < length; i++) {
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return KEY_PREFIX + key;
+        }
+
+        function addScript() {
+            const name = document.getElementById('scriptName').value.trim();
+            const code = document.getElementById('scriptCode').value.trim();
+            let key = document.getElementById('customKey').value.trim();
+
+            if (!name || !code) {
+                showToast('❌ Заполни название и код', true);
+                return;
+            }
+
+            if (!key) {
+                key = generateKey(14);
+            } else {
+                if (!key.startsWith(KEY_PREFIX)) {
+                    key = KEY_PREFIX + key;
+                }
+            }
+
+            if (scripts.some(s => s.key === key)) {
+                showToast('❌ Такой ключ уже существует!', true);
+                return;
+            }
+
+            scripts.push({
+                id: Date.now(),
+                name: name,
+                key: key,
+                code: code,
+                createdAt: new Date().toISOString()
+            });
+
+            saveData();
+            document.getElementById('scriptName').value = '';
+            document.getElementById('scriptCode').value = '';
+            document.getElementById('customKey').value = '';
+            document.getElementById('generatedKeyDisplay').style.display = 'none';
+            showToast('✅ Скрипт сохранён! Ключ: ' + key);
+        }
+
+        function generateKeyField() {
+            const key = generateKey(14);
+            lastGeneratedKey = key;
+            document.getElementById('generatedKey').textContent = key;
+            document.getElementById('generatedKeyDisplay').style.display = 'block';
+            document.getElementById('customKey').value = key;
+        }
+
+        function copyGeneratedKey() {
+            navigator.clipboard.writeText(lastGeneratedKey);
+            showToast('📋 Ключ скопирован!');
+        }
+
+        function deleteScript(id) {
+            if (!confirm('Удалить скрипт?')) return;
+            scripts = scripts.filter(s => s.id !== id);
+            saveData();
+            showToast('🗑️ Скрипт удалён');
+        }
+
+        function viewScript(id) {
+            const script = scripts.find(s => s.id === id);
+            if (!script) return;
+            currentModalScript = script;
+            document.getElementById('modalTitle').textContent = '📜 ' + script.name;
+            document.getElementById('modalCode').textContent = script.code;
+            document.getElementById('scriptModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('scriptModal').classList.remove('active');
+        }
+
+        function copyModalCode() {
+            if (currentModalScript) {
+                navigator.clipboard.writeText(currentModalScript.code);
+                showToast('📋 Код скопирован!');
+            }
+        }
+
+        function copyApiUrl() {
+            const url = document.getElementById('apiUrlDisplay').textContent;
+            navigator.clipboard.writeText(url);
+            showToast('📋 URL скопирован!');
+        }
+
+        function showToast(msg, isError) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast' + (isError ? ' error' : '');
+            t.style.display = 'block';
+            clearTimeout(t._timeout);
+            t._timeout = setTimeout(() => { t.style.display = 'none'; }, 3000);
+        }
+
+        // === РЕНДЕРИНГ ===
+        function renderScripts() {
+            const container = document.getElementById('scriptsContainer');
+            if (scripts.length === 0) {
+                container.innerHTML = '<div class="empty">📭 Нет скриптов. Добавь первый!</div>';
+                return;
+            }
+            let html = '<div class="script-list">';
+            scripts.forEach(s => {
+                html += `
+                    <div class="script-card">
+                        <div class="info">
+                            <span class="name">${escapeHtml(s.name)}</span>
+                            <span class="key">${escapeHtml(s.key)}</span>
+                            <span class="badge-key">активен</span>
+                        </div>
+                        <div class="actions">
+                            <button class="btn btn-secondary btn-sm" onclick="viewScript(${s.id})">📄 Код</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteScript(${s.id})">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function renderKeys() {
+            const container = document.getElementById('keysContainer');
+            if (scripts.length === 0) {
+                container.innerHTML = '<div class="empty">🔑 Нет ключей</div>';
+                return;
+            }
+            let html = '<div class="script-list">';
+            scripts.forEach(s => {
+                html += `
+                    <div class="script-card">
+                        <div class="info">
+                            <span class="name">${escapeHtml(s.name)}</span>
+                            <span class="key">${escapeHtml(s.key)}</span>
+                            <span style="color:#8b949e;font-size:12px;">${new Date(s.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        <div class="actions">
+                            <button class="copy-btn" onclick="copyKey('${s.key}')">📋 Копировать</button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function copyKey(key) {
+            navigator.clipboard.writeText(key);
+            showToast('📋 Ключ скопирован: ' + key);
+        }
+
+        function updateStats() {
+            document.getElementById('totalScripts').textContent = scripts.length;
+            document.getElementById('totalKeys').textContent = scripts.length;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function renderAll() {
+            renderScripts();
+            renderKeys();
+            updateStats();
+        }
+
+        // === ВКЛАДКИ ===
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+            });
+        });
+
+        // === ОБНОВЛЕНИЕ API URL ===
+        function updateApiUrl() {
+            const url = window.location.href.split('?')[0] + '?action=check&key=und_ВАШ_КЛЮЧ';
+            document.getElementById('apiUrlDisplay').textContent = url;
+        }
+
+        // === ПРОВЕРКА КЛЮЧА (для API) ===
+        function handleCheckKey() {
+            const params = new URLSearchParams(window.location.search);
+            const action = params.get('action');
+            const key = params.get('key');
+
+            if (action === 'check' && key) {
+                const script = scripts.find(s => s.key === key);
+                if (script) {
+                    document.body.innerHTML = JSON.stringify({
+                        success: true,
+                        name: script.name,
+                        script: script.code
+                    });
+                } else {
+                    document.body.innerHTML = JSON.stringify({
+                        success: false,
+                        message: 'Неверный ключ'
+                    });
+                }
+                return true;
+            }
+            return false;
+        }
+
+        // === ЗАПУСК ===
+        loadData();
+        renderAll();
+        updateApiUrl();
+
+        // Если это API-запрос — показываем JSON
+        if (!handleCheckKey()) {
+            // Если нет параметров, показываем интерфейс
+        }
+
+        console.log('✅ UPND MENU Key System загружен!');
+        console.log('📌 Ключи начинаются с: ' + KEY_PREFIX);
+        console.log('📌 Всего скриптов: ' + scripts.length);
+    </script>
+</body>
+</html>
