@@ -1,290 +1,780 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPND TEST — генератор ссылок для Roblox</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Roblox 3D Builder — 20 моделей из Toolbox</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: #0d1117;
             color: #c9d1d9;
-            padding: 20px;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
+            touch-action: none;
+        }
+        #app { display: flex; flex-direction: column; height: 100vh; }
+        .toolbar {
             display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .container {
-            max-width: 600px;
-            width: 100%;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding: 6px 10px;
             background: #161b22;
-            border-radius: 16px;
-            padding: 30px;
-            border: 1px solid #30363d;
-            text-align: center;
+            border-bottom: 1px solid #30363d;
+            align-items: center;
+            z-index: 10;
+            flex-shrink: 0;
+            max-height: 90px;
+            overflow-y: auto;
         }
-        h1 { color: #58a6ff; font-size: 32px; margin-bottom: 5px; }
-        .subtitle { color: #8b949e; font-size: 14px; margin-bottom: 25px; }
-        .btn {
-            padding: 14px 40px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 700;
-            transition: 0.3s;
-            background: #238636;
-            color: white;
-            width: 100%;
-        }
-        .btn:hover { background: #2ea043; }
-        .btn:active { transform: scale(0.97); }
-        .btn-secondary { background: #21262d; margin-top: 10px; }
-        .btn-secondary:hover { background: #30363d; }
-        .result-box {
-            margin-top: 20px;
-            padding: 15px;
+        .toolbar .group {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-wrap: wrap;
             background: #0d1117;
-            border-radius: 10px;
-            border: 1px solid #30363d;
-            word-break: break-all;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            color: #f0883e;
-            min-height: 50px;
-            display: none;
-            text-align: left;
-        }
-        .result-box.show { display: block; }
-        .result-box .label {
-            color: #8b949e;
-            font-size: 11px;
-            margin-bottom: 5px;
-            font-family: 'Segoe UI', sans-serif;
-        }
-        .result-box .link {
-            color: #58a6ff;
-            word-break: break-all;
-        }
-        .status {
-            margin-top: 15px;
-            padding: 10px;
+            padding: 4px 8px;
             border-radius: 8px;
-            font-size: 14px;
-            display: none;
+            border: 1px solid #21262d;
         }
-        .status.show { display: block; }
-        .status.success { background: #1c3a2a; color: #3fb950; border: 1px solid #238636; }
-        .status.error { background: #3a1c1c; color: #f85149; border: 1px solid #da3633; }
-        .copy-btn {
+        .toolbar input, .toolbar select {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            color: #c9d1d9;
+            padding: 4px 8px;
+            font-size: 11px;
+            min-width: 50px;
+            height: 26px;
+        }
+        .toolbar input[type="color"] { padding: 2px; width: 30px; height: 26px; cursor: pointer; }
+        .toolbar input[type="number"] { width: 55px; }
+        .toolbar input[type="text"] { min-width: 80px; }
+        .btn {
+            background: #21262d;
+            border: none;
+            border-radius: 4px;
+            color: #c9d1d9;
+            padding: 4px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            height: 26px;
+        }
+        .btn:hover { background: #30363d; }
+        .btn-primary { background: #238636; color: white; }
+        .btn-primary:hover { background: #2ea043; }
+        .btn-danger { background: #da3633; color: white; }
+        .btn-danger:hover { background: #f85149; }
+        .btn-success { background: #1f6feb; color: white; }
+        .btn-success:hover { background: #388bfd; }
+        .btn-warning { background: #d29922; color: #0d1117; }
+        .btn-warning:hover { background: #e3b341; }
+        .btn-sm { padding: 2px 8px; font-size: 10px; height: 22px; }
+
+        #canvas-container {
+            flex: 1;
+            position: relative;
+            background: #0d1117;
+            overflow: hidden;
+        }
+        #canvas-container canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            touch-action: none;
+        }
+
+        .coords-panel {
+            position: absolute;
+            left: 8px;
+            bottom: 70px;
+            background: rgba(22, 27, 34, 0.9);
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 8px 12px;
+            min-width: 140px;
+            backdrop-filter: blur(8px);
+            font-size: 11px;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .coords-panel .label { color: #8b949e; font-size: 9px; text-transform: uppercase; }
+        .coords-panel .value { color: #58a6ff; font-family: monospace; font-size: 12px; }
+        .coords-panel .copy-btn {
+            pointer-events: auto;
             background: #21262d;
             border: none;
             color: #8b949e;
-            padding: 6px 16px;
-            border-radius: 6px;
+            padding: 2px 8px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
-            margin-top: 8px;
-            transition: 0.3s;
+            font-size: 9px;
+            margin-top: 2px;
         }
-        .copy-btn:hover { background: #30363d; color: white; }
-        .footer { margin-top: 25px; color: #8b949e; font-size: 12px; border-top: 1px solid #30363d; padding-top: 15px; }
-        .test-script {
-            background: #0d1117;
-            padding: 12px;
-            border-radius: 8px;
+
+        .object-list {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            background: rgba(22, 27, 34, 0.9);
             border: 1px solid #30363d;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: #8b949e;
-            text-align: left;
-            margin-top: 15px;
+            border-radius: 10px;
+            padding: 6px;
+            min-width: 100px;
+            max-height: 150px;
+            overflow-y: auto;
+            backdrop-filter: blur(8px);
+            z-index: 5;
+            font-size: 10px;
+        }
+        .object-list .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2px 4px;
+            border-bottom: 1px solid #21262d;
+            gap: 4px;
+        }
+        .object-list .item .color-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            border: 1px solid #30363d;
+            flex-shrink: 0;
+        }
+        .object-list .item .del-btn {
+            background: none; border: none; color: #f85149;
+            cursor: pointer; font-size: 10px;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            background: rgba(22, 27, 34, 0.85);
+            padding: 4px 12px;
+            border-radius: 30px;
+            border: 1px solid #30363d;
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .controls .btn { height: 24px; font-size: 10px; padding: 2px 10px; }
+
+        .modal {
             display: none;
-            max-height: 200px;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 16px;
+            padding: 16px;
+            max-width: 650px;
+            width: 100%;
+            max-height: 80vh;
             overflow: auto;
         }
-        .test-script.show { display: block; }
-        .test-script code { color: #58a6ff; }
-        .proxy-hint {
-            background: #1c1c2e;
-            padding: 10px 16px;
+        .modal-content h2 { color: #58a6ff; margin-bottom: 10px; font-size: 16px; }
+        .modal-content pre {
+            background: #0d1117;
+            padding: 10px;
             border-radius: 8px;
-            border-left: 3px solid #f0883e;
-            margin: 15px 0;
-            font-size: 13px;
+            overflow: auto;
+            font-size: 10px;
+            font-family: monospace;
             color: #c9d1d9;
-            text-align: left;
+            border: 1px solid #30363d;
+            white-space: pre-wrap;
+            max-height: 200px;
         }
-        .proxy-hint strong { color: #58a6ff; }
-        .two-btns {
+        .modal-content .actions { display: flex; gap: 6px; margin-top: 10px; justify-content: flex-end; flex-wrap: wrap; }
+
+        .toast {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #238636;
+            color: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            display: none;
+            z-index: 50;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .toast.error { background: #da3633; }
+        .toast.show { display: block; animation: fadeInUp 0.3s ease; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .joystick-area {
+            position: absolute;
+            bottom: 70px;
+            right: 12px;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.12);
+            touch-action: none;
+            z-index: 8;
+            display: none;
+        }
+        .joystick-area .knob {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        @media (max-width: 768px) { .joystick-area { display: block; } }
+        @media (max-width: 600px) {
+            .toolbar { max-height: 110px; }
+            .toolbar input, .toolbar select { font-size: 10px; padding: 2px 4px; min-width: 35px; }
+            .btn { font-size: 9px; padding: 2px 6px; height: 22px; }
+            .coords-panel { bottom: 60px; left: 4px; padding: 4px 8px; min-width: 100px; }
+            .object-list { max-height: 100px; min-width: 70px; }
+            .controls { padding: 2px 8px; }
+            .controls .btn { font-size: 9px; padding: 2px 8px; height: 20px; }
+        }
+        .model-select {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 4px;
+            align-items: center;
         }
-        .two-btns .btn { width: 50%; padding: 10px; font-size: 14px; }
+        .model-select select { min-width: 100px; }
+        .model-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            background: #0d1117;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🔗 UPND TEST</h1>
-        <p class="subtitle">Создаёт готовые ссылки для Roblox</p>
-
-        <div class="proxy-hint">
-            📌 <strong>Как работает:</strong> Сайт создаёт ссылку с прокси
-            <br><code>https://api.allorigins.win/raw?url=ТВОЯ_ССЫЛКА</code>
-            <br>→ Вставляешь в Roblox → Работает!
+    <div id="app">
+        <!-- Панель инструментов -->
+        <div class="toolbar" id="toolbar">
+            <div class="group">
+                <input type="number" id="posX" value="0" step="0.5" placeholder="X">
+                <input type="number" id="posY" value="0" step="0.5" placeholder="Y">
+                <input type="number" id="posZ" value="0" step="0.5" placeholder="Z">
+            </div>
+            <div class="group model-select">
+                <select id="modelSelect" style="min-width:120px;">
+                    <option value="tree">🌳 Дерево</option>
+                    <option value="rock">🪨 Камень</option>
+                    <option value="bench">🪑 Скамейка</option>
+                    <option value="lamp">💡 Фонарь</option>
+                    <option value="fountain">⛲ Фонтан</option>
+                    <option value="car">🚗 Машина</option>
+                    <option value="house">🏠 Домик</option>
+                    <option value="chair">💺 Стул</option>
+                    <option value="table">🪑 Стол</option>
+                    <option value="fence">🚧 Забор</option>
+                    <option value="bridge">🌉 Мост</option>
+                    <option value="tower">🗼 Башня</option>
+                    <option value="statue">🗿 Статуя</option>
+                    <option value="chest">📦 Сундук</option>
+                    <option value="sign">📋 Табличка</option>
+                    <option value="barrel">🛢️ Бочка</option>
+                    <option value="crate">📦 Ящик</option>
+                    <option value="plant">🌱 Растение</option>
+                    <option value="shelf">📚 Полка</option>
+                    <option value="bed">🛏️ Кровать</option>
+                </select>
+                <div class="model-preview" id="modelPreview">🌳</div>
+            </div>
+            <div class="group">
+                <input type="number" id="modelScale" value="1" step="0.1" min="0.3" max="5" style="width:45px;">
+                <input type="color" id="modelColor" value="#8b5cf6" style="width:28px;">
+            </div>
+            <div class="group">
+                <button class="btn btn-primary" id="addModelBtn">➕ Добавить модель</button>
+                <button class="btn btn-success" id="getCodeBtn">📋 Код</button>
+                <button class="btn btn-danger" id="clearBtn">🗑️ Очистить</button>
+            </div>
+            <div class="group">
+                <button class="btn btn-secondary" id="resetCameraBtn">🎯 Сброс</button>
+                <button class="btn btn-secondary" id="toggleGridBtn">📐 Сетка</button>
+            </div>
         </div>
 
-        <button class="btn" onclick="generateTestLink()">🎲 Сгенерировать ссылку для Roblox</button>
-        <button class="btn btn-secondary" onclick="clearAll()">🗑️ Очистить</button>
+        <!-- 3D Контейнер -->
+        <div id="canvas-container">
+            <div class="object-list" id="objectList"><div style="color:#8b949e;font-size:9px;text-align:center;padding:2px;">Объекты (0)</div></div>
 
-        <div class="result-box" id="resultBox">
-            <div class="label">📋 Вставь ЭТУ ссылку в Roblox:</div>
-            <div class="link" id="resultLink"></div>
-            <button class="copy-btn" onclick="copyLink()">📋 Копировать</button>
+            <div class="coords-panel" id="coordsPanel">
+                <div class="label">📍 Координаты</div>
+                <div class="value" id="coordsDisplay">X: 0.0<br>Y: 0.0<br>Z: 0.0</div>
+                <button class="copy-btn" id="copyCoordsBtn">📋 Копировать</button>
+            </div>
+
+            <div class="joystick-area" id="joystick"><div class="knob" id="joystickKnob"></div></div>
+
+            <div class="controls">
+                <button class="btn" id="snapToCoordBtn">🎯 К координатам</button>
+                <button class="btn" id="rotateModelBtn">🔄 Повернуть</button>
+            </div>
         </div>
 
-        <div class="test-script" id="testScript">
-            <strong>📌 Код для теста в Roblox:</strong><br>
-            <code id="testCode">-- Тестовый скрипт</code>
+        <div class="modal" id="codeModal">
+            <div class="modal-content">
+                <h2>📋 Lua-код для Roblox</h2>
+                <pre id="codeOutput">-- Здесь будет код</pre>
+                <div class="actions">
+                    <button class="btn btn-primary" id="copyCodeBtn">📋 Копировать</button>
+                    <button class="btn btn-secondary" id="closeModalBtn">Закрыть</button>
+                </div>
+            </div>
         </div>
 
-        <div class="status" id="status"></div>
-
-        <div class="footer">
-            🔗 Ссылка создана: <span id="linkStatus">⏳ ожидание</span>
-        </div>
+        <div class="toast" id="toast">✅ Готово!</div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // ================================================
-        // === ЛОГИКА ===
-        // ================================================
+        // ============================================================
+        // === ПОЛНЫЙ 3D РЕДАКТОР С 20 МОДЕЛЯМИ ===
+        // ============================================================
 
-        const BASE_URL = window.location.href.split('?')[0];
-        const PROXY_URL = "https://api.allorigins.win/raw?url=";
-        let currentLink = '';
-        let currentProxyLink = '';
+        // --- 20 МОДЕЛЕЙ С ID ИЗ ROBLOX TOOLBOX ---
+        const MODELS = {
+            tree: { id: 186466267, name: 'Дерево', icon: '🌳', color: '#2d8a4e' },
+            rock: { id: 932606923, name: 'Камень', icon: '🪨', color: '#6b6b6b' },
+            bench: { id: 1072766263, name: 'Скамейка', icon: '🪑', color: '#8b6b4b' },
+            lamp: { id: 130786215, name: 'Фонарь', icon: '💡', color: '#f5c542' },
+            fountain: { id: 1132805008, name: 'Фонтан', icon: '⛲', color: '#4a8fbf' },
+            car: { id: 710911863, name: 'Машина', icon: '🚗', color: '#e84118' },
+            house: { id: 633296861, name: 'Домик', icon: '🏠', color: '#d4a373' },
+            chair: { id: 136036614, name: 'Стул', icon: '💺', color: '#7a4a2a' },
+            table: { id: 136036278, name: 'Стол', icon: '🪑', color: '#8b6b4b' },
+            fence: { id: 198891634, name: 'Забор', icon: '🚧', color: '#a67c52' },
+            bridge: { id: 220325248, name: 'Мост', icon: '🌉', color: '#6b4b3b' },
+            tower: { id: 582018270, name: 'Башня', icon: '🗼', color: '#8b7b6b' },
+            statue: { id: 136046445, name: 'Статуя', icon: '🗿', color: '#8b8b8b' },
+            chest: { id: 582542173, name: 'Сундук', icon: '📦', color: '#8b6b3b' },
+            sign: { id: 181753412, name: 'Табличка', icon: '📋', color: '#c9b037' },
+            barrel: { id: 181753410, name: 'Бочка', icon: '🛢️', color: '#6b4b2b' },
+            crate: { id: 181753408, name: 'Ящик', icon: '📦', color: '#8b6b3b' },
+            plant: { id: 186466363, name: 'Растение', icon: '🌱', color: '#2d8a4e' },
+            shelf: { id: 136036428, name: 'Полка', icon: '📚', color: '#6b4b2b' },
+            bed: { id: 136036700, name: 'Кровать', icon: '🛏️', color: '#4a6b8b' }
+        };
 
-        function generateTestLink() {
-            const id = generateId();
-            currentLink = BASE_URL + '?id=' + id;
-            currentProxyLink = PROXY_URL + encodeURIComponent(currentLink);
-            
-            // Показываем ссылку для Roblox
-            document.getElementById('resultLink').textContent = currentProxyLink;
-            document.getElementById('resultBox').classList.add('show');
-            
-            // Тестовый скрипт для Roblox
-            const testScript = `-- ✅ UPND TEST
-local HttpService = game:GetService("HttpService")
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0d1117);
 
--- Вставь эту ссылку в Roblox
-local url = "${currentProxyLink}"
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(20, 15, 20);
+        camera.lookAt(0, 0, 0);
 
-local success, response = pcall(function()
-    return HttpService:GetAsync(url, true)
-end)
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
 
-if success then
-    print("✅ Подключение работает!")
-    print("📌 Ответ сервера:")
-    print(response)
-    local func = loadstring(response)
-    if func then
-        func()
-        print("✅ Тестовый скрипт выполнен!")
-    end
-else
-    print("❌ Ошибка подключения!")
-    warn("Проверь ссылку или интернет")
-end`;
-            document.getElementById('testCode').textContent = testScript;
-            document.getElementById('testScript').classList.add('show');
-            
-            document.getElementById('linkStatus').textContent = '✅ готова';
-            document.getElementById('linkStatus').style.color = '#3fb950';
-            
-            showStatus('✅ Ссылка создана! Вставь её в Roblox', 'success');
+        // --- СВЕТ ---
+        const ambientLight = new THREE.AmbientLight(0x404060);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(20, 30, 20);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        // --- СЕТКА И ПОЛ ---
+        let gridHelper = new THREE.GridHelper(100, 20, 0x30363d, 0x21262d);
+        gridHelper.position.y = -0.01;
+        scene.add(gridHelper);
+
+        const groundGeo = new THREE.PlaneGeometry(100, 100);
+        const groundMat = new THREE.MeshStandardMaterial({ color: 0x0d1117, roughness: 0.8 });
+        const ground = new THREE.Mesh(groundGeo, groundMat);
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = -0.01;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        const axesHelper = new THREE.AxesHelper(5);
+        scene.add(axesHelper);
+
+        // --- СОСТОЯНИЕ ---
+        const objects = [];
+        let isGridVisible = true;
+        let selectedObject = null;
+
+        // --- КООРДИНАТЫ ---
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        function getGroundIntersection(event) {
+            const rect = container.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            const intersect = raycaster.intersectObject(ground);
+            if (intersect.length > 0) return intersect[0].point;
+            return null;
         }
 
-        function generateId() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let id = '';
-            for (let i = 0; i < 8; i++) {
-                id += chars.charAt(Math.floor(Math.random() * chars.length));
+        function updateCoordsDisplay(point) {
+            const display = document.getElementById('coordsDisplay');
+            if (point) {
+                const x = Math.round(point.x * 10) / 10;
+                const y = Math.round(point.y * 10) / 10;
+                const z = Math.round(point.z * 10) / 10;
+                display.innerHTML = `X: ${x}<br>Y: ${y}<br>Z: ${z}`;
+                document.getElementById('posX').value = x;
+                document.getElementById('posY').value = y;
+                document.getElementById('posZ').value = z;
             }
-            return id;
         }
 
-        function copyLink() {
-            if (currentProxyLink) {
-                copyToClipboard(currentProxyLink);
-                showStatus('📋 Ссылка скопирована! Вставь в Roblox', 'success');
+        container.addEventListener('mousemove', (e) => {
+            const point = getGroundIntersection(e);
+            if (point) updateCoordsDisplay(point);
+        });
+
+        // --- ДОБАВЛЕНИЕ МОДЕЛИ ---
+        function addModel() {
+            const modelKey = document.getElementById('modelSelect').value;
+            const modelData = MODELS[modelKey];
+            if (!modelData) return;
+
+            const x = parseFloat(document.getElementById('posX').value) || 0;
+            const y = parseFloat(document.getElementById('posY').value) || 0;
+            const z = parseFloat(document.getElementById('posZ').value) || 0;
+            const scale = parseFloat(document.getElementById('modelScale').value) || 1;
+            const color = document.getElementById('modelColor').value;
+
+            // Группа для модели
+            const group = new THREE.Group();
+            group.position.set(x, y, z);
+            group.scale.set(scale, scale, scale);
+
+            // Основной куб с цветом
+            const size = 2;
+            const geo = new THREE.BoxGeometry(size, size, size);
+            const mat = new THREE.MeshStandardMaterial({
+                color: color,
+                roughness: 0.3,
+                metalness: 0.6,
+                transparent: true,
+                opacity: 0.7,
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            group.add(mesh);
+
+            // Иконка модели
+            const iconCanvas = document.createElement('canvas');
+            iconCanvas.width = 256;
+            iconCanvas.height = 256;
+            const ctx = iconCanvas.getContext('2d');
+            ctx.fillStyle = '#0d1117';
+            ctx.fillRect(0, 0, 256, 256);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 4;
+            ctx.strokeRect(4, 4, 248, 248);
+            ctx.fillStyle = '#c9d1d9';
+            ctx.font = '80px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(modelData.icon, 128, 128);
+            ctx.fillStyle = '#8b949e';
+            ctx.font = '24px sans-serif';
+            ctx.fillText(modelData.name, 128, 220);
+
+            const spriteMap = new THREE.CanvasTexture(iconCanvas);
+            const spriteMat = new THREE.SpriteMaterial({ map: spriteMap, transparent: true });
+            const sprite = new THREE.Sprite(spriteMat);
+            sprite.position.y = size * scale + 1;
+            sprite.scale.set(size * scale * 2, size * scale, 1);
+            group.add(sprite);
+
+            group.userData = {
+                type: 'model',
+                key: modelKey,
+                name: modelData.name,
+                id: modelData.id,
+                icon: modelData.icon,
+                color: color,
+                scale: scale,
+                pos: { x, y, z }
+            };
+
+            scene.add(group);
+            objects.push(group);
+            updateObjectList();
+            showToast(`✅ ${modelData.name} добавлена!`);
+
+            // Телепорт камеры к модели
+            const targetPos = new THREE.Vector3(x, y + 5, z + 10);
+            camera.position.lerp(targetPos, 0.5);
+            camera.lookAt(x, y, z);
+            updateCameraTarget(x, y, z);
+        }
+
+        function updateCameraTarget(x, y, z) {
+            // Просто обновляем lookAt
+            camera.lookAt(x, y, z);
+        }
+
+        // --- ОБНОВЛЕНИЕ СПИСКА ---
+        function updateObjectList() {
+            const list = document.getElementById('objectList');
+            list.innerHTML = `<div style="color:#8b949e;font-size:9px;text-align:center;padding:2px;">Объекты (${objects.length})</div>`;
+            objects.forEach((obj, i) => {
+                const data = obj.userData;
+                const div = document.createElement('div');
+                div.className = 'item';
+                div.innerHTML = `
+                    <span class="color-dot" style="background:${data.color || '#8b5cf6'};"></span>
+                    <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;">${data.icon || '📦'} ${data.name || 'Объект'}</span>
+                    <button class="del-btn" data-index="${i}">✕</button>
+                `;
+                list.appendChild(div);
+                div.querySelector('.del-btn').addEventListener('click', () => {
+                    scene.remove(obj);
+                    objects.splice(i, 1);
+                    updateObjectList();
+                    showToast('🗑️ Объект удалён');
+                });
+            });
+        }
+
+        // --- ГЕНЕРАЦИЯ LUA-КОДА ---
+        function generateLuaCode() {
+            if (objects.length === 0) return '-- Нет объектов';
+
+            let code = '-- Сгенерировано UPND Builder\n';
+            code += 'local InsertService = game:GetService("InsertService")\n\n';
+            code += 'local function createModels()\n';
+            code += '    local models = {}\n';
+
+            objects.forEach((obj, i) => {
+                const data = obj.userData;
+                const pos = data.pos || { x: 0, y: 0, z: 0 };
+                const scale = data.scale || 1;
+                const id = data.id || 0;
+                const name = data.name || 'Model';
+
+                code += `\n    -- ${name} (ID: ${id})\n`;
+                code += `    local model${i} = InsertService:LoadAsset(${id})\n`;
+                code += `    if model${i} then\n`;
+                code += `        model${i}:SetPrimaryPartCFrame(CFrame.new(${pos.x}, ${pos.y}, ${pos.z}))\n`;
+                code += `        model${i}.Scale = Vector3.new(${scale}, ${scale}, ${scale})\n`;
+                code += `        model${i}.Parent = workspace\n`;
+                code += `        models[#models+1] = model${i}\n`;
+                code += `    else\n`;
+                code += `        warn("❌ Модель ${name} (ID: ${id}) не найдена")\n`;
+                code += `    end\n`;
+            });
+
+            code += '\n    return models\n';
+            code += 'end\n\n';
+            code += '-- Выполни createModels() для создания\n';
+            code += 'createModels()\n';
+            return code;
+        }
+
+        // --- КНОПКИ ---
+        document.getElementById('addModelBtn').addEventListener('click', addModel);
+
+        document.getElementById('getCodeBtn').addEventListener('click', () => {
+            const code = generateLuaCode();
+            document.getElementById('codeOutput').textContent = code;
+            document.getElementById('codeModal').classList.add('active');
+        });
+
+        document.getElementById('copyCodeBtn').addEventListener('click', () => {
+            const code = document.getElementById('codeOutput').textContent;
+            navigator.clipboard.writeText(code).then(() => showToast('📋 Код скопирован!'));
+        });
+
+        document.getElementById('closeModalBtn').addEventListener('click', () => {
+            document.getElementById('codeModal').classList.remove('active');
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            if (objects.length === 0) return;
+            if (confirm('Удалить все объекты?')) {
+                objects.forEach(obj => scene.remove(obj));
+                objects.length = 0;
+                updateObjectList();
+                showToast('🗑️ Все объекты удалены');
             }
-        }
+        });
 
-        function copyToClipboard(text) {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text);
-            } else {
-                const ta = document.createElement('textarea');
-                ta.value = text;
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                ta.remove();
+        document.getElementById('resetCameraBtn').addEventListener('click', () => {
+            camera.position.set(20, 15, 20);
+            camera.lookAt(0, 0, 0);
+            showToast('🎯 Камера сброшена');
+        });
+
+        document.getElementById('toggleGridBtn').addEventListener('click', () => {
+            isGridVisible = !isGridVisible;
+            gridHelper.visible = isGridVisible;
+            showToast(isGridVisible ? '📐 Сетка включена' : '📐 Сетка выключена');
+        });
+
+        document.getElementById('snapToCoordBtn').addEventListener('click', () => {
+            const x = parseFloat(document.getElementById('posX').value) || 0;
+            const y = parseFloat(document.getElementById('posY').value) || 0;
+            const z = parseFloat(document.getElementById('posZ').value) || 0;
+            camera.position.set(x + 10, y + 8, z + 10);
+            camera.lookAt(x, y, z);
+            showToast('🎯 Камера к координатам');
+        });
+
+        document.getElementById('copyCoordsBtn').addEventListener('click', () => {
+            const x = document.getElementById('posX').value;
+            const y = document.getElementById('posY').value;
+            const z = document.getElementById('posZ').value;
+            navigator.clipboard.writeText(`{${x}, ${y}, ${z}}`);
+            showToast('📋 Координаты скопированы');
+        });
+
+        // --- ОБНОВЛЕНИЕ ПРЕВЬЮ МОДЕЛИ ---
+        document.getElementById('modelSelect').addEventListener('change', function() {
+            const key = this.value;
+            const data = MODELS[key];
+            if (data) {
+                document.getElementById('modelPreview').textContent = data.icon;
+                document.getElementById('modelColor').value = data.color;
             }
+        });
+
+        // --- УПРАВЛЕНИЕ КАМЕРОЙ ---
+        let isDragging = false;
+        let prevMouse = { x: 0, y: 0 };
+        let spherical = { theta: Math.PI / 4, phi: Math.PI / 4, radius: 30 };
+        let target = new THREE.Vector3(0, 0, 0);
+
+        function updateCamera() {
+            camera.position.x = target.x + spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta);
+            camera.position.y = target.y + spherical.radius * Math.cos(spherical.phi);
+            camera.position.z = target.z + spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta);
+            camera.lookAt(target);
         }
 
-        function showStatus(msg, type) {
-            const el = document.getElementById('status');
-            el.textContent = msg;
-            el.className = 'status show ' + type;
-            setTimeout(() => {
-                el.classList.remove('show');
-            }, 5000);
-        }
-
-        function clearAll() {
-            document.getElementById('resultBox').classList.remove('show');
-            document.getElementById('testScript').classList.remove('show');
-            document.getElementById('status').classList.remove('show');
-            document.getElementById('linkStatus').textContent = '⏳ ожидание';
-            document.getElementById('linkStatus').style.color = '#8b949e';
-            currentLink = '';
-            currentProxyLink = '';
-        }
-
-        // === ОБРАБОТКА GET-ЗАПРОСОВ (API для Roblox) ===
-        function handleApiRequest() {
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
-
-            if (id) {
-                const testScript = `-- Тестовый скрипт UPND
-print("✅ Подключение работает!")
-print("📌 ID: ${id}")
-print("📌 Время: " .. os.time())
-print("📌 Сайт отвечает правильно!")
-print("🎉 Ты успешно подключился к UPND!")`;
-                document.body.textContent = testScript;
-                return true;
+        renderer.domElement.addEventListener('mousedown', (e) => {
+            if (e.button === 0) {
+                isDragging = true;
+                prevMouse = { x: e.clientX, y: e.clientY };
             }
+        });
 
-            return false;
+        window.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const dx = e.clientX - prevMouse.x;
+                const dy = e.clientY - prevMouse.y;
+                spherical.theta -= dx * 0.005;
+                spherical.phi -= dy * 0.005;
+                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi));
+                prevMouse = { x: e.clientX, y: e.clientY };
+                updateCamera();
+            }
+        });
+
+        window.addEventListener('mouseup', () => { isDragging = false; });
+
+        renderer.domElement.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            spherical.radius += e.deltaY * 0.02;
+            spherical.radius = Math.max(3, Math.min(80, spherical.radius));
+            updateCamera();
+        }, { passive: false });
+
+        // --- ТАЧ УПРАВЛЕНИЕ ---
+        let touchStart = null;
+        let touchDist = 0;
+
+        renderer.domElement.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            } else if (e.touches.length === 2) {
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                touchDist = Math.sqrt(dx * dx + dy * dy);
+            }
+        }, { passive: true });
+
+        renderer.domElement.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (e.touches.length === 1 && touchStart) {
+                const dx = e.touches[0].clientX - touchStart.x;
+                const dy = e.touches[0].clientY - touchStart.y;
+                spherical.theta -= dx * 0.005;
+                spherical.phi -= dy * 0.005;
+                spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi));
+                touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                updateCamera();
+            } else if (e.touches.length === 2) {
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                const newDist = Math.sqrt(dx * dx + dy * dy);
+                spherical.radius = Math.max(3, Math.min(80, spherical.radius - (newDist - touchDist) * 0.02));
+                touchDist = newDist;
+                updateCamera();
+            }
+        }, { passive: false });
+
+        function showToast(msg, isError) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast' + (isError ? ' error' : '') + ' show';
+            clearTimeout(t._timeout);
+            t._timeout = setTimeout(() => { t.classList.remove('show'); }, 3000);
         }
 
-        // === ЗАПУСК ===
-        if (!handleApiRequest()) {
-            // Показываем интерфейс
-        }
+        // --- АДАПТАЦИЯ РАЗМЕРА ---
+        window.addEventListener('resize', () => {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        });
 
-        console.log('✅ UPND TEST загружен!');
-        console.log('📌 Ссылки создаются с прокси для Roblox');
-        console.log('📌 Нажми кнопку для генерации');
+        // --- АНИМАЦИЯ ---
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // --- СТАРТ ---
+        updateCamera();
+        console.log('✅ UPND 3D Builder загружен!');
+        console.log('📌 20 моделей из Toolbox доступны');
+        console.log('📌 Выбери модель, укажи координаты и нажми "Добавить модель"');
     </script>
 </body>
 </html>
