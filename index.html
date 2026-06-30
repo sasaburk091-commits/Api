@@ -13,10 +13,7 @@
             padding: 20px;
             min-height: 100vh;
         }
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1100px; margin: 0 auto; }
         .header {
             text-align: center;
             padding: 30px 0 20px;
@@ -29,12 +26,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 900;
-            letter-spacing: 2px;
-        }
-        .header p {
-            color: #8b949e;
-            font-size: 16px;
-            margin-top: 5px;
         }
         .header .badge {
             display: inline-block;
@@ -43,7 +34,6 @@
             border-radius: 20px;
             font-size: 12px;
             color: #58a6ff;
-            margin-top: 8px;
             border: 1px solid #30363d;
         }
         .tabs {
@@ -62,10 +52,7 @@
             font-size: 14px;
             transition: 0.3s;
         }
-        .tab-btn.active {
-            background: #58a6ff;
-            color: #0d1117;
-        }
+        .tab-btn.active { background: #58a6ff; color: #0d1117; }
         .tab-btn:hover { background: #30363d; }
         .tab-content {
             display: none;
@@ -92,9 +79,6 @@
             font-size: 14px;
             outline: none;
         }
-        .input-group input:focus, .input-group textarea:focus {
-            border-color: #58a6ff;
-        }
         .input-group textarea {
             min-height: 120px;
             resize: vertical;
@@ -117,8 +101,6 @@
         .btn-danger:hover { background: #f85149; }
         .btn-secondary { background: #21262d; color: #c9d1d9; }
         .btn-secondary:hover { background: #30363d; }
-        .btn-warning { background: #d29922; color: #0d1117; }
-        .btn-warning:hover { background: #e3b341; }
         .btn-sm { padding: 5px 12px; font-size: 12px; }
         .script-list { display: grid; gap: 12px; margin-top: 15px; }
         .script-card {
@@ -132,7 +114,6 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .script-card .info { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
         .script-card .name { font-weight: 700; color: #58a6ff; font-size: 16px; }
         .script-card .key {
             font-family: 'Courier New', monospace;
@@ -143,7 +124,6 @@
             font-size: 13px;
             border: 1px solid #30363d;
         }
-        .script-card .actions { display: flex; gap: 6px; flex-wrap: wrap; }
         .empty { text-align: center; color: #8b949e; padding: 40px 0; font-size: 16px; }
         .toast {
             position: fixed;
@@ -193,7 +173,6 @@
             white-space: pre-wrap;
             word-break: break-all;
         }
-        .modal .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px; }
         .key-display {
             background: #0d1117;
             padding: 15px;
@@ -205,7 +184,6 @@
             border: 1px solid #30363d;
             margin: 10px 0;
             word-break: break-all;
-            letter-spacing: 1px;
         }
         .copy-btn {
             background: #21262d;
@@ -228,28 +206,22 @@
             margin: 10px 0;
             word-break: break-all;
         }
-        .badge-key { 
-            display: inline-block; 
-            padding: 2px 12px; 
-            border-radius: 12px; 
-            font-size: 11px; 
+        .badge-key {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 600;
             background: #238636;
             color: white;
         }
-        .stats-row {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
+        .stats-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
         .stat-box {
             background: #0d1117;
             padding: 10px 20px;
             border-radius: 10px;
             border: 1px solid #30363d;
         }
-        .stat-box span { color: #8b949e; font-size: 13px; }
         .stat-box strong { color: #58a6ff; font-size: 20px; display: block; }
         .prefix-info {
             background: #1c1c2e;
@@ -279,16 +251,14 @@
             <button class="tab-btn" data-tab="api">🔗 API</button>
         </div>
 
-        <!-- Список скриптов -->
         <div class="tab-content active" id="tab-scripts">
-            <div class="stats-row" id="statsRow">
+            <div class="stats-row">
                 <div class="stat-box"><span>Всего скриптов</span><strong id="totalScripts">0</strong></div>
                 <div class="stat-box"><span>Всего ключей</span><strong id="totalKeys">0</strong></div>
             </div>
             <div id="scriptsContainer"><div class="empty">📭 Нет скриптов. Добавь первый!</div></div>
         </div>
 
-        <!-- Добавление -->
         <div class="tab-content" id="tab-add">
             <h3 style="color:#58a6ff;margin-bottom:15px;">📝 Новый скрипт</h3>
             <div class="prefix-info">🔑 Ключ будет начинаться с: <strong>und_</strong></div>
@@ -311,22 +281,17 @@
             </div>
         </div>
 
-        <!-- Все ключи -->
         <div class="tab-content" id="tab-keys">
             <div id="keysContainer"><div class="empty">🔑 Список ключей</div></div>
         </div>
 
-        <!-- API -->
         <div class="tab-content" id="tab-api">
             <h3 style="color:#58a6ff;margin-bottom:15px;">🔗 API для Roblox</h3>
             <p style="color:#8b949e;margin-bottom:10px;">URL для проверки ключей (GET-запрос):</p>
-            <div class="api-url" id="apiUrlDisplay">https://твой-сайт.github.io/repo/index.html?action=check&key=und_ВАШ_КЛЮЧ</div>
+            <div class="api-url" id="apiUrlDisplay">https://sasaburk091-commits.github.io/Api/?action=check&key=und_ВАШ_КЛЮЧ</div>
             <button class="copy-btn" onclick="copyApiUrl()">📋 Копировать</button>
             <p style="color:#8b949e;margin-top:15px;font-size:13px;">
                 📌 Ответ: <code>{"success":true,"script":"код_скрипта","name":"Название"}</code> или <code>{"success":false}</code>
-            </p>
-            <p style="color:#8b949e;font-size:13px;">
-                📌 В Roblox используй: <code>HttpService:GetAsync(URL)</code>
             </p>
         </div>
     </div>
@@ -337,7 +302,7 @@
         <div class="modal">
             <h2 id="modalTitle">📜 Скрипт</h2>
             <pre id="modalCode"></pre>
-            <div class="actions">
+            <div class="actions" style="display:flex;gap:10px;justify-content:flex-end;margin-top:15px;">
                 <button class="btn btn-secondary" onclick="closeModal()">Закрыть</button>
                 <button class="btn btn-primary" onclick="copyModalCode()">📋 Копировать</button>
             </div>
@@ -471,7 +436,6 @@
             t._timeout = setTimeout(() => { t.style.display = 'none'; }, 3000);
         }
 
-        // === РЕНДЕРИНГ ===
         function renderScripts() {
             const container = document.getElementById('scriptsContainer');
             if (scripts.length === 0) {
@@ -482,12 +446,12 @@
             scripts.forEach(s => {
                 html += `
                     <div class="script-card">
-                        <div class="info">
+                        <div>
                             <span class="name">${escapeHtml(s.name)}</span>
                             <span class="key">${escapeHtml(s.key)}</span>
                             <span class="badge-key">активен</span>
                         </div>
-                        <div class="actions">
+                        <div>
                             <button class="btn btn-secondary btn-sm" onclick="viewScript(${s.id})">📄 Код</button>
                             <button class="btn btn-danger btn-sm" onclick="deleteScript(${s.id})">🗑️</button>
                         </div>
@@ -508,12 +472,12 @@
             scripts.forEach(s => {
                 html += `
                     <div class="script-card">
-                        <div class="info">
+                        <div>
                             <span class="name">${escapeHtml(s.name)}</span>
                             <span class="key">${escapeHtml(s.key)}</span>
                             <span style="color:#8b949e;font-size:12px;">${new Date(s.createdAt).toLocaleDateString()}</span>
                         </div>
-                        <div class="actions">
+                        <div>
                             <button class="copy-btn" onclick="copyKey('${s.key}')">📋 Копировать</button>
                         </div>
                     </div>
@@ -545,24 +509,8 @@
             updateStats();
         }
 
-        // === ВКЛАДКИ ===
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
-            });
-        });
-
-        // === ОБНОВЛЕНИЕ API URL ===
-        function updateApiUrl() {
-            const url = window.location.href.split('?')[0] + '?action=check&key=und_ВАШ_КЛЮЧ';
-            document.getElementById('apiUrlDisplay').textContent = url;
-        }
-
-        // === ПРОВЕРКА КЛЮЧА (для API) ===
-        function handleCheckKey() {
+        // === ОБРАБОТКА API-ЗАПРОСОВ ===
+        function handleApiRequest() {
             const params = new URLSearchParams(window.location.search);
             const action = params.get('action');
             const key = params.get('key');
@@ -583,17 +531,35 @@
                 }
                 return true;
             }
+
+            if (action === 'ping') {
+                document.body.innerHTML = JSON.stringify({
+                    success: true,
+                    message: 'pong'
+                });
+                return true;
+            }
+
             return false;
         }
+
+        // === ВКЛАДКИ ===
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+            });
+        });
 
         // === ЗАПУСК ===
         loadData();
         renderAll();
-        updateApiUrl();
 
         // Если это API-запрос — показываем JSON
-        if (!handleCheckKey()) {
-            // Если нет параметров, показываем интерфейс
+        if (!handleApiRequest()) {
+            // Показываем интерфейс
         }
 
         console.log('✅ UPND MENU Key System загружен!');
