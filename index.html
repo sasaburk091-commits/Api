@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🤖 ИИ-ПОМОЩНИК</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,7 +15,6 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             background: white;
             border-radius: 20px;
@@ -28,58 +22,43 @@
             width: 100%;
             max-width: 600px;
             padding: 30px;
-            transition: all 0.3s ease;
         }
-
         .header {
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 2px solid #f0f0f0;
         }
-
         .header h1 {
             font-size: 28px;
             color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
-
         .header h1 span {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         .key-section {
             background: #f8f9fa;
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
         }
-
         .input-group {
             display: flex;
             gap: 10px;
-            margin-bottom: 10px;
         }
-
         .input-group input {
             flex: 1;
             padding: 12px 16px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
-            transition: border-color 0.3s ease;
         }
-
         .input-group input:focus {
             outline: none;
             border-color: #667eea;
         }
-
         .btn {
             padding: 12px 24px;
             border: none;
@@ -90,67 +69,50 @@
             transition: all 0.3s ease;
             color: white;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+        .btn-danger {
+            background: #dc3545;
         }
-
-        .btn-secondary {
-            background: #6c757d;
+        .btn-danger:hover {
+            background: #c82333;
         }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
         .status-message {
             padding: 12px;
             border-radius: 8px;
             margin-top: 10px;
             display: none;
         }
-
         .status-message.success {
             display: block;
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-
         .status-message.error {
             display: block;
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-
         .status-message.info {
             display: block;
             background: #d1ecf1;
             color: #0c5460;
             border: 1px solid #bee5eb;
         }
-
         .chat-section {
             display: none;
             margin-top: 20px;
         }
-
         .chat-section.active {
             display: block;
         }
-
         .chat-header {
             background: #f8f9fa;
             padding: 15px;
@@ -160,7 +122,6 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .chat-header .time-left {
             background: #667eea;
             color: white;
@@ -168,7 +129,6 @@
             border-radius: 20px;
             font-size: 14px;
         }
-
         .chat-messages {
             background: #f8f9fa;
             border-radius: 12px;
@@ -178,68 +138,57 @@
             overflow-y: auto;
             margin-bottom: 15px;
         }
-
         .message {
             margin-bottom: 15px;
             padding: 12px 16px;
             border-radius: 12px;
             animation: slideIn 0.3s ease;
         }
-
         .message.user {
             background: #e3f2fd;
             margin-left: 20%;
             text-align: right;
         }
-
         .message.bot {
             background: white;
             margin-right: 20%;
             border-left: 4px solid #667eea;
         }
-
         .message .sender {
             font-size: 12px;
             font-weight: 600;
             color: #666;
             margin-bottom: 4px;
         }
-
         .message .content {
             word-wrap: break-word;
             line-height: 1.5;
         }
-
         .chat-input {
             display: flex;
             gap: 10px;
+            margin-bottom: 10px;
         }
-
         .chat-input input {
             flex: 1;
             padding: 12px 16px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
-            transition: border-color 0.3s ease;
         }
-
         .chat-input input:focus {
             outline: none;
             border-color: #667eea;
         }
-
         .loading {
             display: none;
             text-align: center;
             padding: 10px;
             color: #667eea;
         }
-
         .loading.active {
             display: block;
         }
-
         .spinner {
             display: inline-block;
             width: 20px;
@@ -249,56 +198,28 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .exit-btn {
-            margin-top: 15px;
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .actions .btn {
+            flex: 1;
             text-align: center;
         }
-
-        .exit-btn button {
-            background: #dc3545;
-            padding: 8px 20px;
-            font-size: 14px;
-        }
-
-        .exit-btn button:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
-        }
-
         @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-            }
-
-            .input-group {
-                flex-direction: column;
-            }
-
-            .message.user {
-                margin-left: 10%;
-            }
-
-            .message.bot {
-                margin-right: 10%;
-            }
+            .container { padding: 20px; }
+            .input-group { flex-direction: column; }
+            .message.user { margin-left: 10%; }
+            .message.bot { margin-right: 10%; }
         }
     </style>
 </head>
@@ -308,52 +229,39 @@
             <h1>🤖 <span>ИИ-ПОМОЩНИК</span></h1>
         </div>
 
-        <!-- Key Input Section -->
         <div class="key-section" id="keySection">
             <div class="input-group">
                 <input type="text" id="keyInput" placeholder="🔑 Введите ключ" />
-                <button class="btn btn-primary" id="checkKeyBtn">Проверить</button>
+                <button class="btn btn-primary" id="checkKeyBtn">Войти</button>
             </div>
             <div id="statusMessage" class="status-message"></div>
         </div>
 
-        <!-- Chat Section -->
         <div class="chat-section" id="chatSection">
             <div class="chat-header">
                 <span>💬 Чат с ИИ</span>
                 <span class="time-left" id="timeLeft">00:00</span>
             </div>
-
-            <div class="chat-messages" id="chatMessages">
-                <!-- Messages will appear here -->
-            </div>
-
+            <div class="chat-messages" id="chatMessages"></div>
             <div class="loading" id="loadingIndicator">
                 <span class="spinner"></span> Думаю...
             </div>
-
             <div class="chat-input">
                 <input type="text" id="questionInput" placeholder="❓ Задайте вопрос..." />
                 <button class="btn btn-primary" id="askBtn">Отправить</button>
             </div>
-
-            <div class="exit-btn">
-                <button class="btn btn-secondary" id="exitBtn">🚪 Выйти</button>
+            <div class="actions">
+                <button class="btn btn-danger" id="exitBtn">🚪 Выйти</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Configuration
-        const SECRET_TOKEN = "MySuperSecretToken2026";
+        // ===== КОНФИГ =====
         const SERVER_URL = "http://93.115.101.157:14109";
+        const SECRET_TOKEN = "MySuperSecretToken2026";
 
-        // State
-        let currentKey = "";
-        let timeLeft = "";
-        let isKeyValid = false;
-
-        // DOM Elements
+        // ===== DOM =====
         const keyInput = document.getElementById('keyInput');
         const checkKeyBtn = document.getElementById('checkKeyBtn');
         const statusMessage = document.getElementById('statusMessage');
@@ -365,162 +273,92 @@
         const loadingIndicator = document.getElementById('loadingIndicator');
         const exitBtn = document.getElementById('exitBtn');
 
-        // Helper function to show status messages
-        function showStatus(message, type) {
-            statusMessage.textContent = message;
+        let currentKey = "";
+
+        function showStatus(msg, type) {
+            statusMessage.textContent = msg;
             statusMessage.className = 'status-message';
-            if (type) {
-                statusMessage.classList.add(type);
-            }
+            if (type) statusMessage.classList.add(type);
         }
 
-        // Helper function to add message to chat
         function addMessage(text, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            messageDiv.innerHTML = `
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            div.innerHTML = `
                 <div class="sender">${sender === 'user' ? '👤 Вы' : '🤖 ИИ'}</div>
                 <div class="content">${text}</div>
             `;
-            chatMessages.appendChild(messageDiv);
+            chatMessages.appendChild(div);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Check key function
-        async function checkKey(key) {
+        async function apiCall(endpoint, data) {
             try {
-                const response = await fetch(`${SERVER_URL}/api/check_key`, {
+                const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        token: SECRET_TOKEN,
-                        key: key
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: SECRET_TOKEN, ...data })
                 });
-
-                if (!response.ok) {
-                    throw new Error('Сервер недоступен');
-                }
-
-                const data = await response.json();
-                return data;
-            } catch (error) {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (e) {
                 throw new Error('Сервер недоступен');
             }
         }
 
-        // Ask question function
-        async function askQuestion(question) {
-            try {
-                const response = await fetch(`${SERVER_URL}/api/ask`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        token: SECRET_TOKEN,
-                        key: currentKey,
-                        question: question
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Сервер недоступен');
-                }
-
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                throw new Error('Сервер недоступен');
-            }
-        }
-
-        // Handle check key
+        // ===== ПРОВЕРКА КЛЮЧА =====
         checkKeyBtn.addEventListener('click', async () => {
             const key = keyInput.value.trim();
             if (!key) {
-                showStatus('Пожалуйста, введите ключ', 'error');
-                return;
-            }
-
-            if (key.toLowerCase() === 'exit') {
-                location.reload();
+                showStatus('Введите ключ', 'error');
                 return;
             }
 
             checkKeyBtn.disabled = true;
-            checkKeyBtn.textContent = 'Проверка...';
-            showStatus('Проверка ключа...', 'info');
+            checkKeyBtn.textContent = '⏳';
+            showStatus('Проверка...', 'info');
 
             try {
-                const result = await checkKey(key);
-                
+                const result = await apiCall('check_key', { key });
                 if (result.status === 'success') {
                     currentKey = key;
-                    timeLeft = result.time_left;
-                    isKeyValid = true;
-                    
-                    showStatus(`✅ Ключ активен! Осталось: ${timeLeft}`, 'success');
-                    
-                    // Show chat section
-                    chatSection.classList.add('active');
-                    timeLeftDisplay.textContent = timeLeft;
+                    showStatus(`✅ Ключ активен! Осталось: ${result.time_left}`, 'success');
+                    timeLeftDisplay.textContent = result.time_left;
                     document.getElementById('keySection').style.display = 'none';
-                    
-                    // Add welcome message
-                    addMessage('👋 Привет! Я ИИ-помощник. Задайте мне любой вопрос.', 'bot');
-                    
-                    // Focus on question input
+                    chatSection.classList.add('active');
+                    addMessage('👋 Привет! Задай мне любой вопрос.', 'bot');
                     questionInput.focus();
                 } else {
-                    showStatus(`❌ ${result.message || 'Ошибка'}`, 'error');
+                    showStatus(`❌ ${result.message}`, 'error');
                 }
-            } catch (error) {
-                showStatus(`❌ ${error.message}`, 'error');
+            } catch (e) {
+                showStatus(`❌ ${e.message}`, 'error');
             } finally {
                 checkKeyBtn.disabled = false;
-                checkKeyBtn.textContent = 'Проверить';
+                checkKeyBtn.textContent = 'Войти';
             }
         });
 
-        // Handle ask question
+        // ===== ЗАПРОС К ИИ =====
         askBtn.addEventListener('click', async () => {
             const question = questionInput.value.trim();
-            if (!question) {
-                showStatus('Пожалуйста, введите вопрос', 'error');
-                return;
-            }
+            if (!question) return;
 
-            if (question.toLowerCase() === 'exit') {
-                location.reload();
-                return;
-            }
-
-            // Add user message
             addMessage(question, 'user');
             questionInput.value = '';
             askBtn.disabled = true;
             loadingIndicator.classList.add('active');
 
             try {
-                const result = await askQuestion(question);
-                
+                const result = await apiCall('ask', { key: currentKey, question });
                 if (result.status === 'success') {
-                    const answer = result.answer || 'Ответ получен';
-                    addMessage(answer, 'bot');
-                    
-                    // Update time left if provided
-                    if (result.time_left) {
-                        timeLeft = result.time_left;
-                        timeLeftDisplay.textContent = timeLeft;
-                    }
+                    addMessage(result.answer, 'bot');
+                    if (result.time_left) timeLeftDisplay.textContent = result.time_left;
                 } else {
-                    addMessage(`❌ ${result.message || 'Ошибка'}`, 'bot');
+                    addMessage(`❌ ${result.message}`, 'bot');
                 }
-            } catch (error) {
-                addMessage(`❌ ${error.message}`, 'bot');
+            } catch (e) {
+                addMessage(`❌ ${e.message}`, 'bot');
             } finally {
                 askBtn.disabled = false;
                 loadingIndicator.classList.remove('active');
@@ -528,31 +366,16 @@
             }
         });
 
-        // Handle Enter key for both inputs
-        keyInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                checkKeyBtn.click();
-            }
-        });
+        // ===== ENTER =====
+        keyInput.addEventListener('keypress', e => { if (e.key === 'Enter') checkKeyBtn.click(); });
+        questionInput.addEventListener('keypress', e => { if (e.key === 'Enter') askBtn.click(); });
 
-        questionInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                askBtn.click();
-            }
-        });
-
-        // Handle exit
+        // ===== ВЫХОД =====
         exitBtn.addEventListener('click', () => {
-            if (confirm('Вы уверены, что хотите выйти?')) {
-                location.reload();
-            }
+            if (confirm('Выйти?')) location.reload();
         });
 
-        // Focus on key input on load
         keyInput.focus();
-
-        // Add some initial styling to make the page more robust
-        console.log('🤖 ИИ-ПОМОЩНИК загружен!');
     </script>
 </body>
 </html>
