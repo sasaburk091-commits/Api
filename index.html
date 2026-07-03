@@ -1,994 +1,558 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Roblox Menu Builder</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 ИИ-ПОМОЩНИК</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #0d1117;
-            color: #c9d1d9;
-            height: 100vh;
-            overflow: hidden;
-            touch-action: none;
-        }
-        #app {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            height: 100vh;
-            max-width: 100vw;
-        }
-
-        /* Верхняя панель */
-        .toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            padding: 6px 8px;
-            background: #161b22;
-            border-bottom: 1px solid #30363d;
+            justify-content: center;
             align-items: center;
-            z-index: 10;
-            flex-shrink: 0;
-            max-height: 100px;
-            overflow-y: auto;
-        }
-        .toolbar .group {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-            flex-wrap: wrap;
-            background: #0d1117;
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 1px solid #21262d;
-        }
-        .toolbar input,
-        .toolbar select,
-        .toolbar textarea {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 4px;
-            color: #c9d1d9;
-            padding: 4px 8px;
-            font-size: 11px;
-            min-width: 50px;
-            height: 26px;
-        }
-        .toolbar textarea {
-            min-height: 40px;
-            min-width: 120px;
-            resize: vertical;
-            font-family: monospace;
-            font-size: 10px;
-        }
-        .btn {
-            background: #21262d;
-            border: none;
-            border-radius: 4px;
-            color: #c9d1d9;
-            padding: 4px 12px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: 0.2s;
-            white-space: nowrap;
-            height: 26px;
-        }
-        .btn:hover {
-            background: #30363d;
-        }
-        .btn-primary {
-            background: #238636;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #2ea043;
-        }
-        .btn-danger {
-            background: #da3633;
-            color: white;
-        }
-        .btn-danger:hover {
-            background: #f85149;
-        }
-        .btn-success {
-            background: #1f6feb;
-            color: white;
-        }
-        .btn-success:hover {
-            background: #388bfd;
-        }
-        .btn-warning {
-            background: #d29922;
-            color: #0d1117;
-        }
-        .btn-warning:hover {
-            background: #e3b341;
-        }
-        .btn-sm {
-            padding: 2px 8px;
-            font-size: 9px;
-            height: 20px;
+            padding: 20px;
         }
 
-        /* Основной контент */
-        .main-area {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            transition: all 0.3s ease;
         }
 
-        /* Левая панель — редактор */
-        .editor-panel {
-            width: 280px;
-            min-width: 200px;
-            background: #161b22;
-            border-right: 1px solid #30363d;
-            padding: 10px;
-            overflow-y: auto;
-            flex-shrink: 0;
-        }
-        .editor-panel h3 {
-            color: #58a6ff;
-            font-size: 12px;
-            margin-bottom: 8px;
-            border-bottom: 1px solid #30363d;
-            padding-bottom: 4px;
-        }
-        .editor-panel .prop-group {
-            margin-bottom: 8px;
-        }
-        .editor-panel .prop-group label {
-            display: block;
-            font-size: 10px;
-            color: #8b949e;
-            margin-bottom: 2px;
-        }
-        .editor-panel .prop-group input,
-        .editor-panel .prop-group select,
-        .editor-panel .prop-group textarea {
-            width: 100%;
-            padding: 4px 6px;
-            font-size: 10px;
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 4px;
-            color: #c9d1d9;
-        }
-        .editor-panel .prop-group textarea {
-            min-height: 50px;
-            font-family: monospace;
-            font-size: 9px;
-        }
-        .editor-panel .prop-group .color-row {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-        .editor-panel .prop-group .color-row input[type="color"] {
-            width: 30px;
-            height: 26px;
-            padding: 2px;
-            cursor: pointer;
-        }
-
-        /* Центр — превью менюшки */
-        .preview-area {
-            flex: 1;
-            background: #0d1117;
-            position: relative;
-            overflow: hidden;
-            min-height: 200px;
-        }
-        .preview-area .phone-frame {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 320px;
-            height: 500px;
-            background: #0a0a14;
-            border: 2px solid #30363d;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
-        }
-        .preview-area .phone-frame .screen {
-            width: 100%;
-            height: 100%;
-            background: #111122;
-            position: relative;
-            overflow: hidden;
-        }
-        .preview-area .phone-frame .screen .menu-preview {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        .preview-area .phone-frame .screen .menu-preview .preview-btn {
-            position: absolute;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            pointer-events: auto;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        .header {
             text-align: center;
-            min-width: 60px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #333;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-        }
-        .preview-area .phone-frame .screen .menu-preview .preview-btn .btn-icon {
-            font-size: 16px;
-        }
-        .preview-area .phone-frame .screen .menu-preview .preview-btn .btn-label {
-            font-size: 11px;
+            gap: 10px;
         }
 
-        /* Правая панель — список элементов */
-        .elements-panel {
-            width: 200px;
-            min-width: 150px;
-            background: #161b22;
-            border-left: 1px solid #30363d;
-            padding: 10px;
-            overflow-y: auto;
-            flex-shrink: 0;
+        .header h1 span {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .elements-panel h3 {
-            color: #58a6ff;
-            font-size: 12px;
-            margin-bottom: 8px;
-            border-bottom: 1px solid #30363d;
-            padding-bottom: 4px;
+
+        .key-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
-        .elements-panel .element-item {
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .status-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .status-message.success {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-message.error {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-message.info {
+            display: block;
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .chat-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .chat-section.active {
+            display: block;
+        }
+
+        .chat-header {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 4px 8px;
-            background: #0d1117;
-            border: 1px solid #21262d;
-            border-radius: 4px;
-            margin-bottom: 4px;
-            font-size: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .elements-panel .element-item:hover {
-            background: #1c2128;
-            border-color: #30363d;
-        }
-        .elements-panel .element-item .del-btn {
-            background: none;
-            border: none;
-            color: #f85149;
-            cursor: pointer;
-            font-size: 12px;
-            padding: 0 4px;
-        }
-        .elements-panel .element-item .del-btn:hover {
-            color: #ff6b6b;
-        }
-        .elements-panel .element-item.active {
-            border-color: #58a6ff;
-            background: #1c2128;
         }
 
-        /* Модальное окно с кодом */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-        }
-        .modal.active {
-            display: flex;
-        }
-        .modal-content {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 16px;
-            padding: 20px;
-            max-width: 700px;
-            width: 100%;
-            max-height: 80vh;
-            overflow: auto;
-        }
-        .modal-content h2 {
-            color: #58a6ff;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        .modal-content pre {
-            background: #0d1117;
-            padding: 12px;
-            border-radius: 8px;
-            overflow: auto;
-            font-size: 10px;
-            font-family: monospace;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
-            white-space: pre-wrap;
-            max-height: 300px;
-        }
-        .modal-content .actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #238636;
+        .chat-header .time-left {
+            background: #667eea;
             color: white;
-            padding: 4px 16px;
-            border-radius: 16px;
-            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .chat-messages {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message.user {
+            background: #e3f2fd;
+            margin-left: 20%;
+            text-align: right;
+        }
+
+        .message.bot {
+            background: white;
+            margin-right: 20%;
+            border-left: 4px solid #667eea;
+        }
+
+        .message .sender {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .message .content {
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .loading {
             display: none;
-            z-index: 50;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            white-space: nowrap;
+            text-align: center;
+            padding: 10px;
+            color: #667eea;
         }
-        .toast.error {
-            background: #da3633;
-        }
-        .toast.show {
+
+        .loading.active {
             display: block;
-            animation: fadeInUp 0.3s ease;
         }
-        @keyframes fadeInUp {
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateX(-50%) translateY(8px);
+                transform: translateY(-10px);
             }
             to {
                 opacity: 1;
-                transform: translateX(-50%) translateY(0);
+                transform: translateY(0);
             }
         }
 
-        /* Адаптив */
-        @media (max-width: 900px) {
-            .main-area {
+        .exit-btn {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .exit-btn button {
+            background: #dc3545;
+            padding: 8px 20px;
+            font-size: 14px;
+        }
+
+        .exit-btn button:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            .input-group {
                 flex-direction: column;
             }
-            .editor-panel {
-                width: 100%;
-                min-width: auto;
-                max-height: 200px;
-                border-right: none;
-                border-bottom: 1px solid #30363d;
+
+            .message.user {
+                margin-left: 10%;
             }
-            .elements-panel {
-                width: 100%;
-                min-width: auto;
-                max-height: 150px;
-                border-left: none;
-                border-top: 1px solid #30363d;
-            }
-            .preview-area .phone-frame {
-                width: 280px;
-                height: 440px;
-            }
-        }
-        @media (max-width: 500px) {
-            .preview-area .phone-frame {
-                width: 220px;
-                height: 380px;
-            }
-            .toolbar .group {
-                padding: 2px 4px;
-            }
-            .toolbar input,
-            .toolbar select {
-                font-size: 9px;
-                padding: 2px 4px;
-                height: 20px;
-                min-width: 30px;
-            }
-            .btn {
-                font-size: 9px;
-                padding: 2px 6px;
-                height: 20px;
-            }
-            .editor-panel {
-                max-height: 150px;
-                padding: 6px;
-            }
-            .elements-panel {
-                max-height: 100px;
-                padding: 6px;
-            }
-            .preview-area .phone-frame .screen .menu-preview .preview-btn {
-                padding: 4px 10px;
-                font-size: 10px;
-                min-width: 40px;
+
+            .message.bot {
+                margin-right: 10%;
             }
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <!-- Верхняя панель -->
-        <div class="toolbar">
-            <div class="group">
-                <button class="btn btn-primary" id="addGuiBtn">➕ Создать ScreenGui</button>
-                <button class="btn btn-success" id="addButtonBtn">➕ Кнопка</button>
-                <button class="btn btn-warning" id="generateCodeBtn">📋 Сгенерировать код</button>
-                <button class="btn btn-danger" id="clearAllBtn">🗑️ Очистить всё</button>
-            </div>
-            <div class="group">
-                <select id="deviceType">
-                    <option value="both">📱💻 Оба</option>
-                    <option value="phone">📱 Телефон</option>
-                    <option value="pc">💻 Компьютер</option>
-                </select>
-            </div>
-            <div class="group">
-                <input type="text" id="menuName" placeholder="Название менюшки" value="MyMenu" style="min-width:100px;">
-            </div>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 <span>ИИ-ПОМОЩНИК</span></h1>
         </div>
 
-        <!-- Основная область -->
-        <div class="main-area">
-            <!-- Левая панель — редактор свойств -->
-            <div class="editor-panel" id="editorPanel">
-                <h3>📐 Свойства</h3>
-                <div id="propertiesContent">
-                    <p style="color:#8b949e;font-size:11px;">Выбери элемент, чтобы редактировать</p>
-                </div>
+        <!-- Key Input Section -->
+        <div class="key-section" id="keySection">
+            <div class="input-group">
+                <input type="text" id="keyInput" placeholder="🔑 Введите ключ" />
+                <button class="btn btn-primary" id="checkKeyBtn">Проверить</button>
             </div>
-
-            <!-- Центр — превью -->
-            <div class="preview-area" id="previewArea">
-                <div class="phone-frame">
-                    <div class="screen" id="screenPreview">
-                        <div class="menu-preview" id="menuPreview"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Правая панель — список элементов -->
-            <div class="elements-panel" id="elementsPanel">
-                <h3>📋 Элементы</h3>
-                <div id="elementsList">
-                    <p style="color:#8b949e;font-size:10px;">Нет элементов</p>
-                </div>
-            </div>
+            <div id="statusMessage" class="status-message"></div>
         </div>
 
-        <!-- Модальное окно с кодом -->
-        <div class="modal" id="codeModal">
-            <div class="modal-content">
-                <h2>📋 Сгенерированный Lua-код</h2>
-                <pre id="codeOutput">-- Код будет здесь</pre>
-                <div class="actions">
-                    <button class="btn btn-primary" id="copyCodeBtn">📋 Копировать</button>
-                    <button class="btn btn-secondary" id="closeCodeModalBtn">Закрыть</button>
-                </div>
+        <!-- Chat Section -->
+        <div class="chat-section" id="chatSection">
+            <div class="chat-header">
+                <span>💬 Чат с ИИ</span>
+                <span class="time-left" id="timeLeft">00:00</span>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will appear here -->
+            </div>
+
+            <div class="loading" id="loadingIndicator">
+                <span class="spinner"></span> Думаю...
+            </div>
+
+            <div class="chat-input">
+                <input type="text" id="questionInput" placeholder="❓ Задайте вопрос..." />
+                <button class="btn btn-primary" id="askBtn">Отправить</button>
+            </div>
+
+            <div class="exit-btn">
+                <button class="btn btn-secondary" id="exitBtn">🚪 Выйти</button>
             </div>
         </div>
-
-        <div class="toast" id="toast">✅ Готово!</div>
     </div>
 
     <script>
-        // ============================================================
-        // === ПОЛНЫЙ РЕДАКТОР МЕНЮШЕК ===
-        // ============================================================
+        // Configuration
+        const SECRET_TOKEN = "MySuperSecretToken2026";
+        const SERVER_URL = "http://93.115.101.157:14109";
 
-        // --- СОСТОЯНИЕ ---
-        let state = {
-            guis: [],
-            selectedId: null,
-            nextId: 1,
-            menuName: 'MyMenu',
-            deviceType: 'both',
-            imageCache: {},
-        };
+        // State
+        let currentKey = "";
+        let timeLeft = "";
+        let isKeyValid = false;
 
-        // --- ФУНКЦИИ СОЗДАНИЯ ---
-        function createGui(name) {
-            const gui = {
-                id: state.nextId++,
-                type: 'gui',
-                name: name || 'ScreenGui',
-                buttons: [],
-                properties: {
-                    BackgroundColor3: '#1a1a2e',
-                    Size: '0, 0, 0, 0',
-                    Position: '0.5, 0, 0.5, 0',
-                    AnchorPoint: '0.5, 0.5',
-                    Visible: true,
-                }
-            };
-            state.guis.push(gui);
-            return gui;
-        }
+        // DOM Elements
+        const keyInput = document.getElementById('keyInput');
+        const checkKeyBtn = document.getElementById('checkKeyBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        const chatSection = document.getElementById('chatSection');
+        const chatMessages = document.getElementById('chatMessages');
+        const questionInput = document.getElementById('questionInput');
+        const askBtn = document.getElementById('askBtn');
+        const timeLeftDisplay = document.getElementById('timeLeft');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const exitBtn = document.getElementById('exitBtn');
 
-        function createButton(guiId, label) {
-            const gui = state.guis.find(g => g.id === guiId);
-            if (!gui) return null;
-            const btn = {
-                id: state.nextId++,
-                type: 'button',
-                name: 'Button',
-                label: label || 'Кнопка',
-                properties: {
-                    BackgroundColor3: '#238636',
-                    TextColor3: '#ffffff',
-                    Size: '0, 120, 0, 40',
-                    Position: '0.5, -60, 0.5, -20',
-                    AnchorPoint: '0.5, 0.5',
-                    Text: label || 'Кнопка',
-                    Font: 'GothamBold',
-                    TextSize: 14,
-                    Visible: true,
-                },
-                script: '',
-                scriptType: 'LocalScript',
-                image: null,
-            };
-            gui.buttons.push(btn);
-            return btn;
-        }
-
-        // --- РЕНДЕРИНГ ПРЕВЬЮ ---
-        function renderPreview() {
-            const container = document.getElementById('menuPreview');
-            container.innerHTML = '';
-
-            state.guis.forEach(gui => {
-                if (!gui.properties.Visible) return;
-
-                // Создаём контейнер для GUI
-                const guiDiv = document.createElement('div');
-                guiDiv.style.position = 'absolute';
-                guiDiv.style.top = '0';
-                guiDiv.style.left = '0';
-                guiDiv.style.width = '100%';
-                guiDiv.style.height = '100%';
-                guiDiv.style.backgroundColor = gui.properties.BackgroundColor3 || 'transparent';
-                guiDiv.style.pointerEvents = 'none';
-                guiDiv.dataset.guiId = gui.id;
-
-                // Кнопки
-                gui.buttons.forEach(btn => {
-                    if (!btn.properties.Visible) return;
-
-                    const btnEl = document.createElement('div');
-                    btnEl.className = 'preview-btn';
-                    btnEl.style.backgroundColor = btn.properties.BackgroundColor3 || '#238636';
-                    btnEl.style.color = btn.properties.TextColor3 || '#ffffff';
-                    btnEl.style.width = btn.properties.Size.split(',')[0].trim() + 'px';
-                    btnEl.style.height = btn.properties.Size.split(',')[1].trim() + 'px';
-                    btnEl.style.left = btn.properties.Position.split(',')[0].trim() + 'px';
-                    btnEl.style.top = btn.properties.Position.split(',')[1].trim() + 'px';
-                    btnEl.style.transform = `translate(${btn.properties.AnchorPoint ? '-50%, -50%' : '0, 0'})`;
-                    btnEl.style.fontSize = btn.properties.TextSize + 'px';
-                    btnEl.style.fontFamily = btn.properties.Font || 'Gotham';
-                    btnEl.style.borderRadius = '8px';
-                    btnEl.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
-                    btnEl.style.display = 'flex';
-                    btnEl.style.alignItems = 'center';
-                    btnEl.style.justifyContent = 'center';
-                    btnEl.style.gap = '4px';
-                    btnEl.style.pointerEvents = 'auto';
-                    btnEl.style.cursor = 'pointer';
-                    btnEl.dataset.btnId = btn.id;
-                    btnEl.dataset.guiId = gui.id;
-
-                    // Иконка
-                    if (btn.image) {
-                        const img = document.createElement('span');
-                        img.className = 'btn-icon';
-                        img.textContent = btn.image;
-                        btnEl.appendChild(img);
-                    }
-
-                    // Текст
-                    const label = document.createElement('span');
-                    label.className = 'btn-label';
-                    label.textContent = btn.properties.Text || btn.label;
-                    btnEl.appendChild(label);
-
-                    // Клик для выбора в редакторе
-                    btnEl.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        selectElement(btn.id);
-                    });
-
-                    guiDiv.appendChild(btnEl);
-                });
-
-                container.appendChild(guiDiv);
-            });
-        }
-
-        // --- ОБНОВЛЕНИЕ СПИСКА ЭЛЕМЕНТОВ ---
-        function renderElementsList() {
-            const list = document.getElementById('elementsList');
-            list.innerHTML = '';
-
-            state.guis.forEach(gui => {
-                // Gui элемент
-                const guiItem = document.createElement('div');
-                guiItem.className = 'element-item' + (state.selectedId === gui.id ? ' active' : '');
-                guiItem.innerHTML = `
-                    <span>📱 ${gui.name}</span>
-                    <button class="del-btn" data-id="${gui.id}" data-type="gui">✕</button>
-                `;
-                guiItem.addEventListener('click', () => selectElement(gui.id));
-                list.appendChild(guiItem);
-
-                // Кнопки
-                gui.buttons.forEach(btn => {
-                    const btnItem = document.createElement('div');
-                    btnItem.className = 'element-item' + (state.selectedId === btn.id ? ' active' : '');
-                    btnItem.innerHTML = `
-                        <span>🔘 ${btn.label}</span>
-                        <button class="del-btn" data-id="${btn.id}" data-type="button">✕</button>
-                    `;
-                    btnItem.addEventListener('click', () => selectElement(btn.id));
-                    list.appendChild(btnItem);
-                });
-            });
-
-            // Удаление через кнопки
-            document.querySelectorAll('.del-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const id = parseInt(btn.dataset.id);
-                    const type = btn.dataset.type;
-                    if (type === 'gui') {
-                        state.guis = state.guis.filter(g => g.id !== id);
-                        if (state.selectedId === id) state.selectedId = null;
-                    } else if (type === 'button') {
-                        for (const gui of state.guis) {
-                            const idx = gui.buttons.findIndex(b => b.id === id);
-                            if (idx !== -1) {
-                                gui.buttons.splice(idx, 1);
-                                if (state.selectedId === id) state.selectedId = null;
-                                break;
-                            }
-                        }
-                    }
-                    renderAll();
-                    showToast('🗑️ Удалено');
-                });
-            });
-
-            if (state.guis.length === 0) {
-                list.innerHTML = '<p style="color:#8b949e;font-size:10px;">Нет элементов</p>';
+        // Helper function to show status messages
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'status-message';
+            if (type) {
+                statusMessage.classList.add(type);
             }
         }
 
-        // --- ВЫБОР ЭЛЕМЕНТА ---
-        function selectElement(id) {
-            state.selectedId = id;
-            renderAll();
-            renderProperties(id);
+        // Helper function to add message to chat
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `
+                <div class="sender">${sender === 'user' ? '👤 Вы' : '🤖 ИИ'}</div>
+                <div class="content">${text}</div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // --- ОТОБРАЖЕНИЕ СВОЙСТВ ---
-        function renderProperties(id) {
-            const container = document.getElementById('propertiesContent');
-            const element = findElement(id);
+        // Check key function
+        async function checkKey(key) {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/check_key`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: SECRET_TOKEN,
+                        key: key
+                    })
+                });
 
-            if (!element) {
-                container.innerHTML = '<p style="color:#8b949e;font-size:11px;">Выбери элемент, чтобы редактировать</p>';
+                if (!response.ok) {
+                    throw new Error('Сервер недоступен');
+                }
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                throw new Error('Сервер недоступен');
+            }
+        }
+
+        // Ask question function
+        async function askQuestion(question) {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/ask`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: SECRET_TOKEN,
+                        key: currentKey,
+                        question: question
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Сервер недоступен');
+                }
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                throw new Error('Сервер недоступен');
+            }
+        }
+
+        // Handle check key
+        checkKeyBtn.addEventListener('click', async () => {
+            const key = keyInput.value.trim();
+            if (!key) {
+                showStatus('Пожалуйста, введите ключ', 'error');
                 return;
             }
 
-            let html = `<div class="prop-group"><label>🔤 Название</label><input type="text" id="propName" value="${element.name || element.label || ''}"></div>`;
-
-            if (element.type === 'gui') {
-                html += `
-                    <div class="prop-group"><label>🎨 Цвет фона</label>
-                        <div class="color-row">
-                            <input type="color" id="propBgColor" value="${element.properties.BackgroundColor3 || '#1a1a2e'}">
-                        </div>
-                    </div>
-                    <div class="prop-group"><label>👁️ Видимость</label>
-                        <select id="propVisible">
-                            <option value="true" ${element.properties.Visible ? 'selected' : ''}>Видима</option>
-                            <option value="false" ${!element.properties.Visible ? 'selected' : ''}>Скрыта</option>
-                        </select>
-                    </div>
-                `;
-            }
-
-            if (element.type === 'button') {
-                html += `
-                    <div class="prop-group"><label>🔤 Текст</label><input type="text" id="propText" value="${element.properties.Text || element.label || ''}"></div>
-                    <div class="prop-group"><label>🎨 Цвет кнопки</label>
-                        <div class="color-row">
-                            <input type="color" id="propBtnColor" value="${element.properties.BackgroundColor3 || '#238636'}">
-                        </div>
-                    </div>
-                    <div class="prop-group"><label>🎨 Цвет текста</label>
-                        <div class="color-row">
-                            <input type="color" id="propTextColor" value="${element.properties.TextColor3 || '#ffffff'}">
-                        </div>
-                    </div>
-                    <div class="prop-group"><label>📏 Размер (ширина, высота)</label>
-                        <input type="text" id="propSize" value="${element.properties.Size || '120, 40'}">
-                    </div>
-                    <div class="prop-group"><label>📍 Позиция (X, Y)</label>
-                        <input type="text" id="propPosition" value="${element.properties.Position || '0, 0'}">
-                    </div>
-                    <div class="prop-group"><label>🎨 Иконка (эмодзи)</label>
-                        <input type="text" id="propIcon" value="${element.image || ''}" placeholder="😊">
-                    </div>
-                    <div class="prop-group"><label>📜 Скрипт (Lua)</label>
-                        <textarea id="propScript" rows="4">${element.script || ''}</textarea>
-                    </div>
-                    <div class="prop-group"><label>📁 Тип скрипта</label>
-                        <select id="propScriptType">
-                            <option value="LocalScript" ${element.scriptType === 'LocalScript' ? 'selected' : ''}>LocalScript</option>
-                            <option value="Script" ${element.scriptType === 'Script' ? 'selected' : ''}>Script</option>
-                            <option value="ModuleScript" ${element.scriptType === 'ModuleScript' ? 'selected' : ''}>ModuleScript</option>
-                        </select>
-                    </div>
-                    <div class="prop-group"><label>👁️ Видимость</label>
-                        <select id="propVisible">
-                            <option value="true" ${element.properties.Visible ? 'selected' : ''}>Видима</option>
-                            <option value="false" ${!element.properties.Visible ? 'selected' : ''}>Скрыта</option>
-                        </select>
-                    </div>
-                `;
-            }
-
-            container.innerHTML = html;
-
-            // Привязка событий
-            bindPropertyEvents(element);
-        }
-
-        // --- ПРИВЯЗКА СОБЫТИЙ СВОЙСТВ ---
-        function bindPropertyEvents(element) {
-            const bindings = [
-                { id: 'propName', key: 'name', set: (val) => { element.name = val;
-                        element.label = val;
-                        renderAll(); } },
-                { id: 'propText', key: 'text', set: (val) => { element.properties.Text = val;
-                        element.label = val;
-                        renderAll(); } },
-                { id: 'propBgColor', key: 'bgColor', set: (val) => { element.properties.BackgroundColor3 = val;
-                        renderAll(); } },
-                { id: 'propBtnColor', key: 'btnColor', set: (val) => { element.properties.BackgroundColor3 = val;
-                        renderAll(); } },
-                { id: 'propTextColor', key: 'textColor', set: (val) => { element.properties.TextColor3 = val;
-                        renderAll(); } },
-                { id: 'propSize', key: 'size', set: (val) => { element.properties.Size = val;
-                        renderAll(); } },
-                { id: 'propPosition', key: 'position', set: (val) => { element.properties.Position = val;
-                        renderAll(); } },
-                { id: 'propIcon', key: 'icon', set: (val) => { element.image = val;
-                        renderAll(); } },
-                { id: 'propScript', key: 'script', set: (val) => { element.script = val; } },
-                { id: 'propScriptType', key: 'scriptType', set: (val) => { element.scriptType = val; } },
-                { id: 'propVisible', key: 'visible', set: (val) => { element.properties.Visible = val === 'true';
-                        renderAll(); } },
-            ];
-
-            bindings.forEach(b => {
-                const el = document.getElementById(b.id);
-                if (el) {
-                    el.addEventListener('input', () => {
-                        b.set(el.value);
-                    });
-                    el.addEventListener('change', () => {
-                        b.set(el.value);
-                    });
-                }
-            });
-        }
-
-        // --- ПОИСК ЭЛЕМЕНТА ---
-        function findElement(id) {
-            for (const gui of state.guis) {
-                if (gui.id === id) return gui;
-                for (const btn of gui.buttons) {
-                    if (btn.id === id) return btn;
-                }
-            }
-            return null;
-        }
-
-        // --- ГЕНЕРАЦИЯ LUA-КОДА ---
-        function generateLuaCode() {
-            if (state.guis.length === 0) return '-- Нет элементов для генерации';
-
-            let code = '-- Сгенерировано Menu Builder\n';
-            code += 'local Players = game:GetService("Players")\n';
-            code += 'local Player = Players.LocalPlayer\n\n';
-
-            state.guis.forEach(gui => {
-                const name = gui.name || 'ScreenGui';
-                code += `-- GUI: ${name}\n`;
-                code += `local ${name} = Instance.new("ScreenGui")\n`;
-                code += `${name}.Name = "${name}"\n`;
-                if (gui.properties.BackgroundColor3) {
-                    const color = hexToRgb(gui.properties.BackgroundColor3);
-                    code += `${name}.BackgroundColor3 = Color3.fromRGB(${color})\n`;
-                }
-                code += `${name}.ResetOnSpawn = false\n`;
-                code += `${name}.Parent = Player:WaitForChild("PlayerGui")\n\n`;
-
-                gui.buttons.forEach(btn => {
-                    const btnName = btn.label || 'Button';
-                    const varName = btnName:gsub("[^%w]", "");
-
-                    code += `-- Кнопка: ${btnName}\n`;
-                    code += `local ${varName} = Instance.new("TextButton")\n`;
-                    code += `${varName}.Name = "${btnName}"\n`;
-                    code += `${varName}.Size = UDim2.new(${btn.properties.Size || '0, 120, 0, 40'})\n`;
-                    code += `${varName}.Position = UDim2.new(${btn.properties.Position || '0.5, -60, 0.5, -20'})\n`;
-                    code += `${varName}.AnchorPoint = Vector2.new(0.5, 0.5)\n`;
-                    if (btn.properties.BackgroundColor3) {
-                        const color = hexToRgb(btn.properties.BackgroundColor3);
-                        code += `${varName}.BackgroundColor3 = Color3.fromRGB(${color})\n`;
-                    }
-                    if (btn.properties.TextColor3) {
-                        const color = hexToRgb(btn.properties.TextColor3);
-                        code += `${varName}.TextColor3 = Color3.fromRGB(${color})\n`;
-                    }
-                    code += `${varName}.Text = "${btn.properties.Text || btn.label || 'Кнопка'}"\n`;
-                    code += `${varName}.Font = Enum.Font.${btn.properties.Font || 'GothamBold'}\n`;
-                    code += `${varName}.TextSize = ${btn.properties.TextSize || 14}\n`;
-                    code += `${varName}.BorderSizePixel = 0\n`;
-                    code += `${varName}.Parent = ${name}\n`;
-
-                    // Скрипт для кнопки
-                    if (btn.script && btn.script.trim() !== '') {
-                        code += `\n-- Скрипт для ${varName}\n`;
-                        code += `local ${varName}Script = Instance.new("${btn.scriptType || 'LocalScript'}")\n`;
-                        code += `${varName}Script.Parent = ${varName}\n`;
-                        code += `${varName}Script.Disabled = false\n`;
-                        code += `-- Код скрипта:\n`;
-                        code += `--[[\n${btn.script}\n--]]\n`;
-                    }
-
-                    code += `\n`;
-                });
-
-                code += `-- [[ Скрыть/показать меню по нажатию клавиши ]]\n`;
-                code += `-- local UserInputService = game:GetService("UserInputService")\n`;
-                code += `-- UserInputService.InputBegan:Connect(function(input)\n`;
-                code += `--     if input.KeyCode == Enum.KeyCode.X then\n`;
-                code += `--         ${name}.Enabled = not ${name}.Enabled\n`;
-                code += `--     end\n`;
-                code += `-- end)\n\n`;
-            });
-
-            return code;
-        }
-
-        function hexToRgb(hex) {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` :
-                '255, 255, 255';
-        }
-
-        // --- ОБНОВЛЕНИЕ ВСЕГО ---
-        function renderAll() {
-            renderPreview();
-            renderElementsList();
-            if (state.selectedId) {
-                renderProperties(state.selectedId);
-            }
-        }
-
-        // --- TOAST ---
-        function showToast(msg, isError) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.className = 'toast' + (isError ? ' error' : '') + ' show';
-            clearTimeout(t._timeout);
-            t._timeout = setTimeout(() => { t.classList.remove('show'); }, 2500);
-        }
-
-        // --- КНОПКИ ---
-        document.getElementById('addGuiBtn').addEventListener('click', () => {
-            const name = document.getElementById('menuName').value || 'ScreenGui';
-            const gui = createGui(name);
-            state.selectedId = gui.id;
-            renderAll();
-            showToast('✅ ScreenGui создан');
-        });
-
-        document.getElementById('addButtonBtn').addEventListener('click', () => {
-            if (state.guis.length === 0) {
-                showToast('❌ Сначала создай ScreenGui', true);
+            if (key.toLowerCase() === 'exit') {
+                location.reload();
                 return;
             }
-            const gui = state.guis[0];
-            const btn = createButton(gui.id, 'Кнопка');
-            state.selectedId = btn.id;
-            renderAll();
-            showToast('✅ Кнопка создана');
-        });
 
-        document.getElementById('generateCodeBtn').addEventListener('click', () => {
-            const code = generateLuaCode();
-            document.getElementById('codeOutput').textContent = code;
-            document.getElementById('codeModal').classList.add('active');
-        });
+            checkKeyBtn.disabled = true;
+            checkKeyBtn.textContent = 'Проверка...';
+            showStatus('Проверка ключа...', 'info');
 
-        document.getElementById('copyCodeBtn').addEventListener('click', () => {
-            const code = document.getElementById('codeOutput').textContent;
-            navigator.clipboard.writeText(code).then(() => showToast('📋 Код скопирован!'));
-        });
-
-        document.getElementById('closeCodeModalBtn').addEventListener('click', () => {
-            document.getElementById('codeModal').classList.remove('active');
-        });
-
-        document.getElementById('clearAllBtn').addEventListener('click', () => {
-            if (state.guis.length === 0) return;
-            if (confirm('Удалить все элементы?')) {
-                state.guis = [];
-                state.selectedId = null;
-                renderAll();
-                showToast('🗑️ Всё удалено');
+            try {
+                const result = await checkKey(key);
+                
+                if (result.status === 'success') {
+                    currentKey = key;
+                    timeLeft = result.time_left;
+                    isKeyValid = true;
+                    
+                    showStatus(`✅ Ключ активен! Осталось: ${timeLeft}`, 'success');
+                    
+                    // Show chat section
+                    chatSection.classList.add('active');
+                    timeLeftDisplay.textContent = timeLeft;
+                    document.getElementById('keySection').style.display = 'none';
+                    
+                    // Add welcome message
+                    addMessage('👋 Привет! Я ИИ-помощник. Задайте мне любой вопрос.', 'bot');
+                    
+                    // Focus on question input
+                    questionInput.focus();
+                } else {
+                    showStatus(`❌ ${result.message || 'Ошибка'}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ ${error.message}`, 'error');
+            } finally {
+                checkKeyBtn.disabled = false;
+                checkKeyBtn.textContent = 'Проверить';
             }
         });
 
-        document.getElementById('menuName').addEventListener('input', (e) => {
-            if (state.guis.length > 0) {
-                state.guis[0].name = e.target.value || 'ScreenGui';
-                renderAll();
+        // Handle ask question
+        askBtn.addEventListener('click', async () => {
+            const question = questionInput.value.trim();
+            if (!question) {
+                showStatus('Пожалуйста, введите вопрос', 'error');
+                return;
+            }
+
+            if (question.toLowerCase() === 'exit') {
+                location.reload();
+                return;
+            }
+
+            // Add user message
+            addMessage(question, 'user');
+            questionInput.value = '';
+            askBtn.disabled = true;
+            loadingIndicator.classList.add('active');
+
+            try {
+                const result = await askQuestion(question);
+                
+                if (result.status === 'success') {
+                    const answer = result.answer || 'Ответ получен';
+                    addMessage(answer, 'bot');
+                    
+                    // Update time left if provided
+                    if (result.time_left) {
+                        timeLeft = result.time_left;
+                        timeLeftDisplay.textContent = timeLeft;
+                    }
+                } else {
+                    addMessage(`❌ ${result.message || 'Ошибка'}`, 'bot');
+                }
+            } catch (error) {
+                addMessage(`❌ ${error.message}`, 'bot');
+            } finally {
+                askBtn.disabled = false;
+                loadingIndicator.classList.remove('active');
+                questionInput.focus();
             }
         });
 
-        document.getElementById('deviceType').addEventListener('change', (e) => {
-            state.deviceType = e.target.value;
-            showToast('📱 Тип устройства: ' + e.target.options[e.target.selectedIndex].text);
+        // Handle Enter key for both inputs
+        keyInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkKeyBtn.click();
+            }
         });
 
-        // --- ЗАПУСК ---
-        // Создаём тестовую менюшку
-        const testGui = createGui('TestMenu');
-        const testBtn = createButton(testGui.id, 'Тест');
-        testBtn.properties.Position = '0.5, -60, 0.5, -40';
-        testBtn.properties.Text = 'Тест';
-        testBtn.script = 'print("Кнопка нажата!")';
-        state.selectedId = testBtn.id;
+        questionInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                askBtn.click();
+            }
+        });
 
-        renderAll();
-        showToast('✅ Редактор загружен! Создавай менюшки');
+        // Handle exit
+        exitBtn.addEventListener('click', () => {
+            if (confirm('Вы уверены, что хотите выйти?')) {
+                location.reload();
+            }
+        });
 
-        console.log('✅ Menu Builder загружен!');
-        console.log('📌 Создавай ScreenGui и кнопки, редактируй свойства');
-        console.log('📌 Нажми "Сгенерировать код" для получения Lua-кода');
+        // Focus on key input on load
+        keyInput.focus();
+
+        // Add some initial styling to make the page more robust
+        console.log('🤖 ИИ-ПОМОЩНИК загружен!');
     </script>
 </body>
 </html>
