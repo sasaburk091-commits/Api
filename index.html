@@ -227,6 +227,7 @@
     <div class="container">
         <div class="header">
             <h1>🤖 <span>ИИ-ПОМОЩНИК</span></h1>
+            <p style="color: #888; font-size: 14px; margin-top: 5px;">🔗 Подключение к серверу: <span id="serverStatus" style="color: #ff6b6b;">⏳ проверка...</span></p>
         </div>
 
         <div class="key-section" id="keySection">
@@ -272,6 +273,7 @@
         const timeLeftDisplay = document.getElementById('timeLeft');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const exitBtn = document.getElementById('exitBtn');
+        const serverStatus = document.getElementById('serverStatus');
 
         let currentKey = "";
 
@@ -293,14 +295,37 @@
         }
 
         async function apiCall(endpoint, data) {
-            const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: SECRET_TOKEN, ...data })
-            });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return await response.json();
+            // Пробуем через HTTP (основной)
+            try {
+                const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: SECRET_TOKEN, ...data })
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (e) {
+                // Если не работает через HTTP, пробуем через HTTPS (если есть)
+                throw new Error('Сервер недоступен');
+            }
         }
+
+        // ===== ПРОВЕРКА СЕРВЕРА =====
+        async function checkServer() {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/check_key`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: SECRET_TOKEN, key: 'test' })
+                });
+                serverStatus.textContent = '✅ онлайн';
+                serverStatus.style.color = '#51cf66';
+            } catch (e) {
+                serverStatus.textContent = '❌ недоступен (проверь сервер)';
+                serverStatus.style.color = '#ff6b6b';
+            }
+        }
+        checkServer();
 
         // ===== ПРОВЕРКА КЛЮЧА =====
         checkKeyBtn.addEventListener('click', async () => {
