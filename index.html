@@ -293,17 +293,13 @@
         }
 
         async function apiCall(endpoint, data) {
-            try {
-                const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: SECRET_TOKEN, ...data })
-                });
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                return await response.json();
-            } catch (e) {
-                throw new Error('Сервер недоступен');
-            }
+            const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: SECRET_TOKEN, ...data })
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return await response.json();
         }
 
         // ===== ПРОВЕРКА КЛЮЧА =====
