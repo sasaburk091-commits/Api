@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 ИИ-ПОМОЩНИК</title>
+    <title>Умный дисплей</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+            background: #0d1117;
+            color: white;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -16,387 +20,286 @@
             padding: 20px;
         }
         .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
             width: 100%;
-            max-width: 600px;
-            padding: 30px;
-        }
-        .header {
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
         }
-        .header h1 {
-            font-size: 28px;
-            color: #333;
+        h1 {
+            margin-bottom: 25px;
         }
-        .header h1 span {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .key-section {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .input-group {
+        .tabs {
             display: flex;
             gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
         }
-        .input-group input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
+        .tab {
+            background: #21262d;
+            padding: 12px 30px;
             border-radius: 8px;
-            font-size: 16px;
-        }
-        .input-group input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            transition: 0.3s;
+            user-select: none;
+        }
+        .tab:hover {
+            background: #30363d;
+        }
+        .tab.active {
+            border-color: #58a6ff;
+            background: #161b22;
+        }
+        .panel {
+            display: none;
+            background: #161b22;
+            padding: 35px;
+            border-radius: 15px;
+            border: 1px solid #30363d;
+            min-height: 280px;
+        }
+        .panel.active {
+            display: block;
+        }
+        .text-box {
+            font-size: 24px;
+            line-height: 1.6;
+            min-height: 120px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        textarea {
+            width: 100%;
+            height: 180px;
+            background: #0d1117;
             color: white;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-        .btn-danger {
-            background: #dc3545;
-        }
-        .btn-danger:hover {
-            background: #c82333;
-        }
-        .status-message {
-            padding: 12px;
+            border: 1px solid #30363d;
             border-radius: 8px;
-            margin-top: 10px;
-            display: none;
+            padding: 12px;
+            font-size: 16px;
+            resize: vertical;
+            font-family: Arial;
+            outline: none;
         }
-        .status-message.success {
-            display: block;
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        textarea:focus {
+            border-color: #58a6ff;
         }
-        .status-message.error {
-            display: block;
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .status-message.info {
-            display: block;
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        .chat-section {
-            display: none;
-            margin-top: 20px;
-        }
-        .chat-section.active {
-            display: block;
-        }
-        .chat-header {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .chat-header .time-left {
-            background: #667eea;
+        button {
+            background: #238636;
             color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #2ea043;
+        }
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
             font-size: 14px;
         }
-        .chat-messages {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
-            min-height: 200px;
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 15px;
+        .success {
+            background: #0d4a1f;
+            color: #58d68d;
         }
-        .message {
-            margin-bottom: 15px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            animation: slideIn 0.3s ease;
+        .error {
+            background: #4a1f1f;
+            color: #f1948a;
         }
-        .message.user {
-            background: #e3f2fd;
-            margin-left: 20%;
-            text-align: right;
-        }
-        .message.bot {
-            background: white;
-            margin-right: 20%;
-            border-left: 4px solid #667eea;
-        }
-        .message .sender {
-            font-size: 12px;
-            font-weight: 600;
-            color: #666;
-            margin-bottom: 4px;
-        }
-        .message .content {
-            word-wrap: break-word;
-            line-height: 1.5;
-        }
-        .chat-input {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .chat-input input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-        .chat-input input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 10px;
-            color: #667eea;
-        }
-        .loading.active {
-            display: block;
-        }
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
+        .loader {
+            border: 3px solid #21262d;
+            border-top: 3px solid #58a6ff;
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 15px auto;
         }
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .current-preview {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: left;
+            border-left: 3px solid #58a6ff;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
-        .actions {
-            display: flex;
-            gap: 10px;
+        .hint {
+            color: #8b949e;
+            font-size: 13px;
             margin-top: 10px;
-        }
-        .actions .btn {
-            flex: 1;
-            text-align: center;
-        }
-        @media (max-width: 480px) {
-            .container { padding: 20px; }
-            .input-group { flex-direction: column; }
-            .message.user { margin-left: 10%; }
-            .message.bot { margin-right: 10%; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🤖 <span>ИИ-ПОМОЩНИК</span></h1>
-            <p style="color: #888; font-size: 14px; margin-top: 5px;">🔗 Подключение к серверу: <span id="serverStatus" style="color: #ff6b6b;">⏳ проверка...</span></p>
+        <h1>📡 Умный дисплей</h1>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('view')">👁️ Просмотр</div>
+            <div class="tab" onclick="switchTab('admin')">🔐 Админка</div>
         </div>
 
-        <div class="key-section" id="keySection">
-            <div class="input-group">
-                <input type="text" id="keyInput" placeholder="🔑 Введите ключ" />
-                <button class="btn btn-primary" id="checkKeyBtn">Войти</button>
+        <!-- Панель просмотра -->
+        <div class="panel active" id="viewPanel">
+            <div class="text-box" id="textDisplay">
+                <div class="loader"></div>
+                Загрузка...
             </div>
-            <div id="statusMessage" class="status-message"></div>
+            <div class="status" id="viewStatus">Подключение...</div>
         </div>
 
-        <div class="chat-section" id="chatSection">
-            <div class="chat-header">
-                <span>💬 Чат с ИИ</span>
-                <span class="time-left" id="timeLeft">00:00</span>
+        <!-- Панель админки -->
+        <div class="panel" id="adminPanel">
+            <div class="current-preview" id="currentText">
+                <strong>📄 Текущий текст:</strong><br>
+                Загрузка...
             </div>
-            <div class="chat-messages" id="chatMessages"></div>
-            <div class="loading" id="loadingIndicator">
-                <span class="spinner"></span> Думаю...
-            </div>
-            <div class="chat-input">
-                <input type="text" id="questionInput" placeholder="❓ Задайте вопрос..." />
-                <button class="btn btn-primary" id="askBtn">Отправить</button>
-            </div>
-            <div class="actions">
-                <button class="btn btn-danger" id="exitBtn">🚪 Выйти</button>
-            </div>
+
+            <h3 style="text-align:left;">Новый текст:</h3>
+            <textarea id="textInput" placeholder="Введите текст..."></textarea>
+            <br>
+            <button onclick="sendText()">📤 Отправить</button>
+            <div id="adminStatus"></div>
+            <div class="hint">💡 Старый текст будет заменён новым</div>
         </div>
     </div>
 
     <script>
-        // ===== КОНФИГ =====
-        const SERVER_URL = "http://93.115.101.157:14109";
-        const SECRET_TOKEN = "MySuperSecretToken2026";
+        // ===== ЗАШИФРОВАННЫЕ ДАННЫЕ (только здесь) =====
+        const API_URL = atob("aHR0cDovLzkzLjExNS4xMDEuMTU3OjE0MTA5");
+        const PASSWORD = atob("YWRtaW4xMjM=");
+        // ================================================
 
-        // ===== DOM =====
-        const keyInput = document.getElementById('keyInput');
-        const checkKeyBtn = document.getElementById('checkKeyBtn');
-        const statusMessage = document.getElementById('statusMessage');
-        const chatSection = document.getElementById('chatSection');
-        const chatMessages = document.getElementById('chatMessages');
-        const questionInput = document.getElementById('questionInput');
-        const askBtn = document.getElementById('askBtn');
-        const timeLeftDisplay = document.getElementById('timeLeft');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const exitBtn = document.getElementById('exitBtn');
-        const serverStatus = document.getElementById('serverStatus');
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
 
-        let currentKey = "";
-
-        function showStatus(msg, type) {
-            statusMessage.textContent = msg;
-            statusMessage.className = 'status-message';
-            if (type) statusMessage.classList.add(type);
-        }
-
-        function addMessage(text, sender) {
-            const div = document.createElement('div');
-            div.className = `message ${sender}`;
-            div.innerHTML = `
-                <div class="sender">${sender === 'user' ? '👤 Вы' : '🤖 ИИ'}</div>
-                <div class="content">${text}</div>
-            `;
-            chatMessages.appendChild(div);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        async function apiCall(endpoint, data) {
-            // Пробуем через HTTP (основной)
-            try {
-                const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: SECRET_TOKEN, ...data })
-                });
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                return await response.json();
-            } catch (e) {
-                // Если не работает через HTTP, пробуем через HTTPS (если есть)
-                throw new Error('Сервер недоступен');
+            if (tab === 'view') {
+                document.querySelector('.tab:first-child').classList.add('active');
+                document.getElementById('viewPanel').classList.add('active');
+                loadText();
+            } else {
+                document.querySelector('.tab:last-child').classList.add('active');
+                document.getElementById('adminPanel').classList.add('active');
+                loadCurrentText();
             }
         }
 
-        // ===== ПРОВЕРКА СЕРВЕРА =====
-        async function checkServer() {
+        // === ПРОСМОТР ===
+        async function loadText() {
+            const display = document.getElementById('textDisplay');
+            const status = document.getElementById('viewStatus');
+
             try {
-                const response = await fetch(`${SERVER_URL}/api/check_key`, {
+                status.textContent = '⏳ Загрузка...';
+                status.className = 'status';
+                display.innerHTML = '<div class="loader"></div>';
+
+                const response = await fetch(API_URL + '/text', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: SECRET_TOKEN, key: 'test' })
+                    body: JSON.stringify({ password: PASSWORD })
                 });
-                serverStatus.textContent = '✅ онлайн';
-                serverStatus.style.color = '#51cf66';
-            } catch (e) {
-                serverStatus.textContent = '❌ недоступен (проверь сервер)';
-                serverStatus.style.color = '#ff6b6b';
+
+                const data = await response.json();
+
+                if (data.success) {
+                    display.textContent = data.content || '(пусто)';
+                    status.textContent = '✅ Данные получены';
+                    status.className = 'status success';
+                } else {
+                    display.textContent = '❌ ' + (data.error || 'Ошибка');
+                    status.textContent = '❌ Ошибка';
+                    status.className = 'status error';
+                }
+            } catch (error) {
+                display.textContent = '❌ Не удалось подключиться';
+                status.textContent = '❌ Ошибка: ' + error.message;
+                status.className = 'status error';
             }
         }
-        checkServer();
 
-        // ===== ПРОВЕРКА КЛЮЧА =====
-        checkKeyBtn.addEventListener('click', async () => {
-            const key = keyInput.value.trim();
-            if (!key) {
-                showStatus('Введите ключ', 'error');
+        // === АДМИНКА ===
+        async function loadCurrentText() {
+            const preview = document.getElementById('currentText');
+            try {
+                const response = await fetch(API_URL + '/text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: PASSWORD })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    preview.innerHTML = `<strong>📄 Текущий текст:</strong><br>${data.content || '(пусто)'}`;
+                } else {
+                    preview.innerHTML = `<strong>📄 Текущий текст:</strong><br>❌ ${data.error || 'Ошибка'}`;
+                }
+            } catch {
+                preview.innerHTML = '<strong>📄 Текущий текст:</strong><br>❌ Ошибка загрузки';
+            }
+        }
+
+        async function sendText() {
+            const text = document.getElementById('textInput').value;
+            const statusDiv = document.getElementById('adminStatus');
+
+            if (!text.trim()) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ Текст не может быть пустым';
                 return;
             }
 
-            checkKeyBtn.disabled = true;
-            checkKeyBtn.textContent = '⏳';
-            showStatus('Проверка...', 'info');
-
             try {
-                const result = await apiCall('check_key', { key });
-                if (result.status === 'success') {
-                    currentKey = key;
-                    showStatus(`✅ Ключ активен! Осталось: ${result.time_left}`, 'success');
-                    timeLeftDisplay.textContent = result.time_left;
-                    document.getElementById('keySection').style.display = 'none';
-                    chatSection.classList.add('active');
-                    addMessage('👋 Привет! Задай мне любой вопрос.', 'bot');
-                    questionInput.focus();
+                statusDiv.className = 'status';
+                statusDiv.textContent = '⏳ Отправка...';
+
+                const response = await fetch(API_URL + '/upload', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: PASSWORD, content: text })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    statusDiv.className = 'status success';
+                    statusDiv.textContent = '✅ Текст обновлён!';
+                    document.getElementById('textInput').value = '';
+                    loadCurrentText();
                 } else {
-                    showStatus(`❌ ${result.message}`, 'error');
+                    statusDiv.className = 'status error';
+                    statusDiv.textContent = '❌ ' + (data.error || 'Ошибка');
                 }
-            } catch (e) {
-                showStatus(`❌ ${e.message}`, 'error');
-            } finally {
-                checkKeyBtn.disabled = false;
-                checkKeyBtn.textContent = 'Войти';
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ Ошибка: ' + error.message;
             }
-        });
+        }
 
-        // ===== ЗАПРОС К ИИ =====
-        askBtn.addEventListener('click', async () => {
-            const question = questionInput.value.trim();
-            if (!question) return;
+        // Автозагрузка при открытии
+        loadText();
 
-            addMessage(question, 'user');
-            questionInput.value = '';
-            askBtn.disabled = true;
-            loadingIndicator.classList.add('active');
-
-            try {
-                const result = await apiCall('ask', { key: currentKey, question });
-                if (result.status === 'success') {
-                    addMessage(result.answer, 'bot');
-                    if (result.time_left) timeLeftDisplay.textContent = result.time_left;
-                } else {
-                    addMessage(`❌ ${result.message}`, 'bot');
-                }
-            } catch (e) {
-                addMessage(`❌ ${e.message}`, 'bot');
-            } finally {
-                askBtn.disabled = false;
-                loadingIndicator.classList.remove('active');
-                questionInput.focus();
+        // Обновление просмотра каждые 30 секунд
+        setInterval(() => {
+            if (document.getElementById('viewPanel').classList.contains('active')) {
+                loadText();
             }
-        });
-
-        // ===== ENTER =====
-        keyInput.addEventListener('keypress', e => { if (e.key === 'Enter') checkKeyBtn.click(); });
-        questionInput.addEventListener('keypress', e => { if (e.key === 'Enter') askBtn.click(); });
-
-        // ===== ВЫХОД =====
-        exitBtn.addEventListener('click', () => {
-            if (confirm('Выйти?')) location.reload();
-        });
-
-        keyInput.focus();
+        }, 30000);
     </script>
 </body>
 </html>
