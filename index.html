@@ -2,13 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Умный дисплей</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📡 Умный дисплей</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
             background: #0d1117;
@@ -22,126 +19,77 @@
         .container {
             max-width: 800px;
             width: 100%;
-            text-align: center;
         }
         h1 {
-            margin-bottom: 25px;
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 30px;
         }
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            justify-content: center;
-        }
-        .tab {
-            background: #21262d;
-            padding: 12px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: 0.3s;
-            user-select: none;
-        }
-        .tab:hover {
-            background: #30363d;
-        }
-        .tab.active {
-            border-color: #58a6ff;
+        .card {
             background: #161b22;
-        }
-        .panel {
-            display: none;
-            background: #161b22;
-            padding: 35px;
+            padding: 30px;
             border-radius: 15px;
             border: 1px solid #30363d;
-            min-height: 280px;
         }
-        .panel.active {
-            display: block;
-        }
-        .text-box {
-            font-size: 24px;
+        .text-display {
+            background: #0d1117;
+            padding: 25px;
+            border-radius: 10px;
+            min-height: 150px;
+            font-size: 22px;
             line-height: 1.6;
-            min-height: 120px;
             white-space: pre-wrap;
             word-break: break-word;
+            border-left: 4px solid #58a6ff;
         }
-        textarea {
+        .empty-text {
+            color: #8b949e;
+            font-style: italic;
+        }
+        .timestamp {
+            color: #8b949e;
+            font-size: 13px;
+            text-align: right;
+            margin-top: 15px;
+        }
+        button {
+            background: #21262d;
+            color: #58a6ff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
             width: 100%;
-            height: 180px;
+        }
+        button:hover { background: #30363d; }
+        .status {
+            text-align: center;
+            color: #8b949e;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+        .key-box {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px dashed #58a6ff;
+            font-size: 20px;
+            text-align: center;
+            font-family: monospace;
+            margin: 15px 0;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
             background: #0d1117;
             color: white;
             border: 1px solid #30363d;
             border-radius: 8px;
-            padding: 12px;
             font-size: 16px;
-            resize: vertical;
-            font-family: Arial;
-            outline: none;
-        }
-        textarea:focus {
-            border-color: #58a6ff;
-        }
-        button {
-            background: #238636;
-            color: white;
-            border: none;
-            padding: 12px 35px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 12px;
-            transition: 0.3s;
-        }
-        button:hover {
-            background: #2ea043;
-        }
-        .status {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        .success {
-            background: #0d4a1f;
-            color: #58d68d;
-        }
-        .error {
-            background: #4a1f1f;
-            color: #f1948a;
-        }
-        .loader {
-            border: 3px solid #21262d;
-            border-top: 3px solid #58a6ff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 15px auto;
-        }
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        .current-preview {
-            background: #0d1117;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            text-align: left;
-            border-left: 3px solid #58a6ff;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-        .hint {
-            color: #8b949e;
-            font-size: 13px;
-            margin-top: 10px;
+            font-family: monospace;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -149,157 +97,90 @@
     <div class="container">
         <h1>📡 Умный дисплей</h1>
 
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('view')">👁️ Просмотр</div>
-            <div class="tab" onclick="switchTab('admin')">🔐 Админка</div>
-        </div>
-
-        <!-- Панель просмотра -->
-        <div class="panel active" id="viewPanel">
-            <div class="text-box" id="textDisplay">
-                <div class="loader"></div>
-                Загрузка...
-            </div>
-            <div class="status" id="viewStatus">Подключение...</div>
-        </div>
-
-        <!-- Панель админки -->
-        <div class="panel" id="adminPanel">
-            <div class="current-preview" id="currentText">
-                <strong>📄 Текущий текст:</strong><br>
-                Загрузка...
+        <div class="card">
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button onclick="loadText()">🔄 Обновить</button>
+                <button onclick="generateKey()">🔑 Получить ключ</button>
             </div>
 
-            <h3 style="text-align:left;">Новый текст:</h3>
-            <textarea id="textInput" placeholder="Введите текст..."></textarea>
-            <br>
-            <button onclick="sendText()">📤 Отправить</button>
-            <div id="adminStatus"></div>
-            <div class="hint">💡 Старый текст будет заменён новым</div>
+            <div class="text-display" id="textDisplay">
+                <span class="empty-text">Загрузка...</span>
+            </div>
+            <div class="timestamp" id="timestamp"></div>
+
+            <div class="status" id="status"></div>
+
+            <div id="keySection" style="display: none;">
+                <div class="key-box" id="keyDisplay"></div>
+                <p style="color: #8b949e; font-size: 13px; text-align: center;">
+                    💡 Используй этот ключ в Termux
+                </p>
+            </div>
         </div>
     </div>
 
     <script>
-        // ===== ЗАШИФРОВАННЫЕ ДАННЫЕ (только здесь) =====
-        const API_URL = atob("aHR0cDovLzkzLjExNS4xMDEuMTU3OjE0MTA5");
-        const PASSWORD = atob("YWRtaW4xMjM=");
-        // ================================================
+        const API_URL = 'http://93.115.101.157:14109';
 
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-
-            if (tab === 'view') {
-                document.querySelector('.tab:first-child').classList.add('active');
-                document.getElementById('viewPanel').classList.add('active');
-                loadText();
-            } else {
-                document.querySelector('.tab:last-child').classList.add('active');
-                document.getElementById('adminPanel').classList.add('active');
-                loadCurrentText();
-            }
-        }
-
-        // === ПРОСМОТР ===
         async function loadText() {
             const display = document.getElementById('textDisplay');
-            const status = document.getElementById('viewStatus');
+            const timestamp = document.getElementById('timestamp');
+            const status = document.getElementById('status');
 
             try {
                 status.textContent = '⏳ Загрузка...';
-                status.className = 'status';
-                display.innerHTML = '<div class="loader"></div>';
-
-                const response = await fetch(API_URL + '/text', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: PASSWORD })
-                });
-
+                const response = await fetch(API_URL + '/text');
                 const data = await response.json();
 
                 if (data.success) {
-                    display.textContent = data.content || '(пусто)';
-                    status.textContent = '✅ Данные получены';
-                    status.className = 'status success';
-                } else {
-                    display.textContent = '❌ ' + (data.error || 'Ошибка');
-                    status.textContent = '❌ Ошибка';
-                    status.className = 'status error';
+                    if (data.content && data.content.trim()) {
+                        display.textContent = data.content;
+                        display.className = 'text-display';
+                    } else {
+                        display.innerHTML = '<span class="empty-text">📭 Текст ещё не отправлен</span>';
+                    }
+                    timestamp.textContent = '🕐 Обновлено: ' + new Date().toLocaleString();
+                    status.textContent = '✅ Данные загружены';
                 }
             } catch (error) {
-                display.textContent = '❌ Не удалось подключиться';
+                display.innerHTML = '<span class="empty-text">❌ Не удалось подключиться к серверу</span>';
+                status.textContent = '❌ Ошибка подключения';
+            }
+        }
+
+        async function generateKey() {
+            const status = document.getElementById('status');
+            const keySection = document.getElementById('keySection');
+            const keyDisplay = document.getElementById('keyDisplay');
+
+            try {
+                status.textContent = '⏳ Генерация ключа...';
+                const response = await fetch(API_URL + '/generate_key', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    keyDisplay.textContent = data.key;
+                    keySection.style.display = 'block';
+                    status.textContent = '✅ Ключ сгенерирован!';
+                } else {
+                    status.textContent = '❌ ' + data.error;
+                }
+            } catch (error) {
                 status.textContent = '❌ Ошибка: ' + error.message;
-                status.className = 'status error';
             }
         }
 
-        // === АДМИНКА ===
-        async function loadCurrentText() {
-            const preview = document.getElementById('currentText');
-            try {
-                const response = await fetch(API_URL + '/text', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: PASSWORD })
-                });
-                const data = await response.json();
-                if (data.success) {
-                    preview.innerHTML = `<strong>📄 Текущий текст:</strong><br>${data.content || '(пусто)'}`;
-                } else {
-                    preview.innerHTML = `<strong>📄 Текущий текст:</strong><br>❌ ${data.error || 'Ошибка'}`;
-                }
-            } catch {
-                preview.innerHTML = '<strong>📄 Текущий текст:</strong><br>❌ Ошибка загрузки';
-            }
-        }
-
-        async function sendText() {
-            const text = document.getElementById('textInput').value;
-            const statusDiv = document.getElementById('adminStatus');
-
-            if (!text.trim()) {
-                statusDiv.className = 'status error';
-                statusDiv.textContent = '❌ Текст не может быть пустым';
-                return;
-            }
-
-            try {
-                statusDiv.className = 'status';
-                statusDiv.textContent = '⏳ Отправка...';
-
-                const response = await fetch(API_URL + '/upload', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: PASSWORD, content: text })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    statusDiv.className = 'status success';
-                    statusDiv.textContent = '✅ Текст обновлён!';
-                    document.getElementById('textInput').value = '';
-                    loadCurrentText();
-                } else {
-                    statusDiv.className = 'status error';
-                    statusDiv.textContent = '❌ ' + (data.error || 'Ошибка');
-                }
-            } catch (error) {
-                statusDiv.className = 'status error';
-                statusDiv.textContent = '❌ Ошибка: ' + error.message;
-            }
-        }
-
-        // Автозагрузка при открытии
+        // Автозагрузка
         loadText();
 
-        // Обновление просмотра каждые 30 секунд
+        // Обновление каждые 10 секунд
         setInterval(() => {
-            if (document.getElementById('viewPanel').classList.contains('active')) {
+            if (document.visibilityState === 'visible') {
                 loadText();
             }
-        }, 30000);
+        }, 10000);
     </script>
 </body>
 </html>
