@@ -64,6 +64,10 @@
             width: 100%;
         }
         button:hover { background: #30363d; }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .status {
             text-align: center;
             color: #8b949e;
@@ -79,17 +83,30 @@
             text-align: center;
             font-family: monospace;
             margin: 15px 0;
+            word-break: break-all;
         }
-        input {
-            width: 100%;
-            padding: 12px;
-            background: #0d1117;
-            color: white;
-            border: 1px solid #30363d;
+        .flex {
+            display: flex;
+            gap: 10px;
+        }
+        .flex button {
+            flex: 1;
+        }
+        .error-box {
+            background: #4a1f1f;
+            padding: 15px;
             border-radius: 8px;
-            font-size: 16px;
-            font-family: monospace;
-            margin: 10px 0;
+            color: #f1948a;
+            margin-top: 15px;
+            display: none;
+        }
+        .success-box {
+            background: #0d4a1f;
+            padding: 15px;
+            border-radius: 8px;
+            color: #58d68d;
+            margin-top: 15px;
+            display: none;
         }
     </style>
 </head>
@@ -98,17 +115,19 @@
         <h1>📡 Умный дисплей</h1>
 
         <div class="card">
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <div class="flex" style="margin-bottom: 20px;">
                 <button onclick="loadText()">🔄 Обновить</button>
-                <button onclick="generateKey()">🔑 Получить ключ</button>
+                <button id="genKeyBtn" onclick="generateKey()">🔑 Получить ключ</button>
             </div>
 
             <div class="text-display" id="textDisplay">
                 <span class="empty-text">Загрузка...</span>
             </div>
             <div class="timestamp" id="timestamp"></div>
-
             <div class="status" id="status"></div>
+
+            <div id="errorBox" class="error-box"></div>
+            <div id="successBox" class="success-box"></div>
 
             <div id="keySection" style="display: none;">
                 <div class="key-box" id="keyDisplay"></div>
@@ -120,18 +139,42 @@
     </div>
 
     <script>
+        // ===== ПРОКСИ ДЛЯ ОБХОДА CORS =====
+        const PROXY = 'https://corsproxy.io/?';
         const API_URL = 'http://93.115.101.157:14109';
+        // ===================================
 
+        async function apiRequest(endpoint, method = 'GET', body = null) {
+            const url = PROXY + encodeURIComponent(API_URL + endpoint);
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+            if (body) {
+                options.body = JSON.stringify(body);
+            }
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return await response.json();
+        }
+
+        // === ЗАГРУЗКА ТЕКСТА ===
         async function loadText() {
             const display = document.getElementById('textDisplay');
             const timestamp = document.getElementById('timestamp');
             const status = document.getElementById('status');
+            const errorBox = document.getElementById('errorBox');
 
             try {
                 status.textContent = '⏳ Загрузка...';
-                const response = await fetch(API_URL + '/text');
-                const data = await response.json();
-
+                errorBox.style.display = 'none';
+                
+                const data = await apiRequest('/text');
+                
                 if (data.success) {
                     if (data.content && data.content.trim()) {
                         display.textContent = data.content;
@@ -141,46 +184,61 @@
                     }
                     timestamp.textContent = '🕐 Обновлено: ' + new Date().toLocaleString();
                     status.textContent = '✅ Данные загружены';
+                } else {
+                    throw new Error(data.error || 'Неизвестная ошибка');
                 }
             } catch (error) {
-                display.innerHTML = '<span class="empty-text">❌ Не удалось подключиться к серверу</span>';
-                status.textContent = '❌ Ошибка подключения';
+                display.innerHTML = '<span class="empty-text">❌ Не удалось загрузить данные</span>';
+                status.textContent = '❌ Ошибка: ' + error.message;
+                errorBox.textContent = '❌ ' + error.message;
+                errorBox.style.display = 'block';
             }
         }
 
+        // === ГЕНЕРАЦИЯ КЛЮЧА ===
         async function generateKey() {
+            const btn = document.getElementById('genKeyBtn');
             const status = document.getElementById('status');
             const keySection = document.getElementById('keySection');
             const keyDisplay = document.getElementById('keyDisplay');
+            const errorBox = document.getElementById('errorBox');
+            const successBox = document.getElementById('successBox');
+
+            btn.disabled = true;
+            status.textContent = '⏳ Генерация ключа...';
+            errorBox.style.display = 'none';
+            successBox.style.display = 'none';
 
             try {
-                status.textContent = '⏳ Генерация ключа...';
-                const response = await fetch(API_URL + '/generate_key', {
-                    method: 'POST'
-                });
-                const data = await response.json();
-
+                const data = await apiRequest('/generate_key', 'POST');
+                
                 if (data.success) {
                     keyDisplay.textContent = data.key;
                     keySection.style.display = 'block';
                     status.textContent = '✅ Ключ сгенерирован!';
+                    successBox.textContent = '✅ Ключ готов, используй его в Termux.';
+                    successBox.style.display = 'block';
                 } else {
-                    status.textContent = '❌ ' + data.error;
+                    throw new Error(data.error || 'Ошибка генерации');
                 }
             } catch (error) {
                 status.textContent = '❌ Ошибка: ' + error.message;
+                errorBox.textContent = '❌ ' + error.message;
+                errorBox.style.display = 'block';
+            } finally {
+                btn.disabled = false;
             }
         }
 
-        // Автозагрузка
+        // === АВТОЗАГРУЗКА ===
         loadText();
 
-        // Обновление каждые 10 секунд
+        // Обновляем текст каждые 15 секунд
         setInterval(() => {
             if (document.visibilityState === 'visible') {
                 loadText();
             }
-        }, 10000);
+        }, 15000);
     </script>
 </body>
 </html>
