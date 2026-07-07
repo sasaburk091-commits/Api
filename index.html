@@ -139,10 +139,10 @@
     </div>
 
     <script>
-        // ===== ПРОКСИ ДЛЯ ОБХОДА CORS =====
-        const PROXY = 'https://corsproxy.io/?';
+        // ===== ИСПРАВЛЕННЫЙ ПРОКСИ =====
+        const PROXY = 'https://api.allorigins.win/raw?url=';
         const API_URL = 'http://93.115.101.157:14109';
-        // ===================================
+        // =================================
 
         async function apiRequest(endpoint, method = 'GET', body = null) {
             const url = PROXY + encodeURIComponent(API_URL + endpoint);
